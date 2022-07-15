@@ -8,7 +8,7 @@ import {
   string,
 } from 'purify-ts';
 import { useEffect, useState } from 'react';
-import useQuery from './useQuery';
+import { useSearchParams } from 'react-router-dom';
 
 const AccessTokenResponse = Codec.interface({
   access_token: string,
@@ -62,19 +62,25 @@ const useFreesoundApi = (
   clientId: string,
   clientSecret: string,
 ): Maybe<string> => {
-  const query = useQuery();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [maybeAccessToken, setMaybeAccessToken] =
     useState<Maybe<string>>(Nothing);
 
-  // TODO: because of React 18 this is happening twice.
   useEffect(() => {
-    const maybeAuthCode = Maybe.fromNullable(query.get('code'));
+    const maybeAuthCode = Maybe.fromNullable(searchParams.get('code'));
 
     MaybeAsync.liftMaybe(maybeAuthCode)
       .chain((authCode) => fetchAccessToken(clientId, clientSecret, authCode))
       .run()
       .then(setMaybeAccessToken);
-  }, [clientId, clientSecret, query]);
+
+    // TODO: Stopgap to avoid triggering another token fetch with the same auth
+    // code. Best thing to do would be to put all of this stuff server-side.
+    return () => {
+      searchParams.delete('code');
+      setSearchParams(searchParams);
+    };
+  }, [clientId, clientSecret, searchParams]);
 
   return maybeAccessToken;
 };
