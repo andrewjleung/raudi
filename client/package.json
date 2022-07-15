@@ -1,13 +1,21 @@
 {
   "name": "raudi-client",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "license": "ISC",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewjleung/raudi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/andrewjleung/raudi/issues"
+  },
+  "homepage": "https://github.com/andrewjleung/raudi/client#readme",
   "dependencies": {
     "@chakra-ui/react": "^2.2.3",
     "@emotion/react": "^11.9.3",
