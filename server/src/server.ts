@@ -44,11 +44,7 @@ fastify.get(
   },
   async (request, reply) => {
     const { code } = request.query;
-    const maybeAccessTokenResponse = await getAccessToken(
-      FREESOUND_CLIENT_ID,
-      FREESOUND_CLIENT_SECRET,
-      code,
-    );
+    const maybeAccessTokenResponse = await getAccessToken(code);
 
     /*
     1. stringify

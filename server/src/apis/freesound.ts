@@ -1,6 +1,7 @@
 import { Maybe, Nothing } from 'purify-ts';
 import got from 'got';
 import { AccessTokenResponse } from '../types.js';
+import { config } from '../config.js';
 
 const FREESOUND_API_URL = 'https://freesound.org/apiv2';
 
@@ -11,8 +12,6 @@ const objectToParams = (o: Record<string, string>): string =>
     .join('&');
 
 const getAccessToken = async (
-  clientId: string,
-  clientSecret: string,
   authCode: string,
 ): Promise<Maybe<AccessTokenResponse>> => {
   const options = {
@@ -22,8 +21,8 @@ const getAccessToken = async (
   };
 
   const params = objectToParams({
-    client_id: clientId,
-    client_secret: clientSecret,
+    client_id: config.freesoundClientId,
+    client_secret: config.freesoundClientSecret,
     grant_type: 'authorization_code',
     code: authCode,
   });
