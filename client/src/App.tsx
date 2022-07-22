@@ -12,10 +12,10 @@ const App = () => {
       </Button>
       <Button
         onClick={() => {
-          window.location.replace(`http://localhost:3000/auth/testCookie`);
+          window.location.replace(`http://localhost:3000/sounds/random`);
         }}
       >
-        Test cookie!
+        Get a random sound!
       </Button>
     </>
   );

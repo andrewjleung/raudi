@@ -5,7 +5,7 @@ import { config } from '../config.js';
 
 const FREESOUND_API_URL = 'https://freesound.org/apiv2';
 
-// TODO: test this
+// TODO: Test this and move it
 const objectToParams = (o: Record<string, string>): string =>
   Object.entries(o)
     .map(([key, val]) => `${key}=${val}`)
