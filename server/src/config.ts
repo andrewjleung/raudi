@@ -17,11 +17,11 @@ const getEnvOrExit = (key: string): string => {
   const maybeValue = process.env[key];
 
   if (maybeValue === null || maybeValue == undefined) {
-    failAndExit(`Config is missing key ${key}`);
+    return failAndExit(`Config is missing key ${key}`);
   }
 
   if (!maybeValue) {
-    failAndExit(`Config key ${key} is missing a value`);
+    return failAndExit(`Config key ${key} is missing a value`);
   }
 
   return maybeValue;
