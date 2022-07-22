@@ -12,7 +12,7 @@ const App = () => {
       </Button>
       <Button
         onClick={() => {
-          window.location.replace(`http://localhost:3000/testCookie`);
+          window.location.replace(`http://localhost:3000/auth/testCookie`);
         }}
       >
         Test cookie!
