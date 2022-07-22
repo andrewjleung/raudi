@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { encryption } from './encryption.js';
 import Fastify from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
@@ -8,12 +7,9 @@ import { AuthCode } from './schemas/auth.js';
 import { getAccessToken } from './apis/freesound.js';
 import { Maybe, Just, Nothing } from 'purify-ts';
 import { AccessTokenResponse } from './types.js';
-import { config } from './config';
 
 // 1 Hour.
 const ACCESS_DURATION_MS = 1 * 60 * 60 * 1000;
-
-const { encrypt, decrypt } = encryption();
 
 const fastify = Fastify({
   logger: true,
