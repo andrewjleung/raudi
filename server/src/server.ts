@@ -8,20 +8,7 @@ import { AuthCode } from './schemas/auth.js';
 import { getAccessToken } from './apis/freesound.js';
 import { Maybe, Just, Nothing } from 'purify-ts';
 import { AccessTokenResponse } from './types.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const FREESOUND_CLIENT_ID = process.env.FREESOUND_CLIENT_ID;
-const FREESOUND_CLIENT_SECRET = process.env.FREESOUND_CLIENT_SECRET;
-
-if (FREESOUND_CLIENT_ID === undefined) {
-  process.exit(1);
-}
-
-if (FREESOUND_CLIENT_SECRET === undefined) {
-  process.exit(1);
-}
+import { config } from './config';
 
 // 1 Hour.
 const ACCESS_DURATION_MS = 1 * 60 * 60 * 1000;
