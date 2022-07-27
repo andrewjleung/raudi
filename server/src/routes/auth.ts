@@ -16,6 +16,22 @@ const HOST_COOKIE_PREFIX = '__Host-';
 const ACCESS_DATA_COOKIE = `${HOST_COOKIE_PREFIX}accessData`;
 const ACCESS_DURATION_MS = 1 * 60 * 60 * 1000; // 1 hour.
 
+const accessTokenResponseToJwt =
+  (fastify: FastifyInstance) =>
+  (response: AccessTokenResponse): string => {
+    const { access_token, refresh_token, scope, expires_in } = response;
+
+    return fastify.jwt.sign(
+      {
+        access_token: encrypt(access_token),
+        refresh_token: encrypt(refresh_token),
+        scope,
+        expires_in,
+      },
+      { expiresIn: expires_in },
+    );
+  };
+
 const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   fastify.get('/login', async (_request, reply) => {
     reply.redirect(
@@ -23,22 +39,6 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       `https://freesound.org/apiv2/oauth2/authorize/?client_id=${config.freesoundClientId}&response_type=code`,
     );
   });
-
-  const accessTokenResponseToJwt =
-    (fastify: FastifyInstance) =>
-    (response: AccessTokenResponse): string => {
-      const { access_token, refresh_token, scope, expires_in } = response;
-
-      return fastify.jwt.sign(
-        {
-          access_token: encrypt(access_token),
-          refresh_token: encrypt(refresh_token),
-          scope,
-          expires_in,
-        },
-        { expiresIn: expires_in },
-      );
-    };
 
   fastify.get<{ Querystring: AuthCode }>(
     '/callback',
@@ -72,6 +72,10 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
     },
   );
 
+  fastify.get('/hello', async (request, reply) => {
+    reply.send('hello world!');
+  });
+
   done();
 };
 
@@ -92,7 +96,7 @@ const useFreesound = (fastify: FastifyInstance) =>
           refresh_token: decrypt(jwt.refresh_token),
         };
       })
-      .ifNothing(() => reply.send(401));
+      .ifNothing(() => reply.code(401));
 
     done();
   });

@@ -3,7 +3,8 @@ import got from 'got';
 import { AccessTokenResponse } from '../types.js';
 import { config } from '../config.js';
 
-const FREESOUND_API_URL = 'https://freesound.org/apiv2';
+const FREESOUND_URL = 'https://freesound.org';
+const FREESOUND_API_URL = `${FREESOUND_URL}/apiv2`;
 
 // TODO: Test this and move it
 const objectToParams = (o: Record<string, string>): string =>
@@ -40,4 +41,13 @@ const getAccessToken = async (
   }
 };
 
-export { getAccessToken };
+const getRandomSoundId = async (): Promise<string> => {
+  const response = await got.get(`${FREESOUND_URL}/browse/random`);
+  const responseUrl = new URL(response.url);
+  const locations = responseUrl.pathname.split('/');
+  const soundId = locations[locations.indexOf('sounds') + 1];
+
+  return soundId;
+};
+
+export { getAccessToken, getRandomSoundId };
