@@ -9,7 +9,7 @@ import { AccessTokenResponse } from './types.js';
 
 // TODO: Don't use `Maybe` for error handling. Use `Either`!
 // TODO: Make sure that exceptions will be properly handled for things like
-//       decryption, JWT verifications, etc.
+//       decryption, JWT verifications, auth code timeout, access token timeout
 
 declare module 'fastify' {
   interface FastifyRequest {
