@@ -48,28 +48,32 @@ const getRandomSoundId = async (): Promise<Either<unknown, string>> => {
   }
 };
 
-const getSound = async (
-  id: string,
-): Promise<Either<unknown, SoundInstance>> => {
-  // Filter fields by those specified in the SoundInstance type.
-  const fields = Object.keys(SoundInstance.schema().properties);
+const getSound =
+  (accessToken: string) =>
+  async (id: string): Promise<Either<unknown, SoundInstance>> => {
+    // Filter fields by those specified in the SoundInstance type.
+    const fields = Object.keys(SoundInstance.schema().properties || {});
 
-  const options = {
-    searchParams: {
-      fields: fields.join(','),
-    },
+    const options = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      searchParams: {
+        fields: fields.join(','),
+      },
+    };
+
+    try {
+      const response = await got
+        .get(`${FREESOUND_API_URL}/sounds/${id}`, options)
+        .json();
+
+      console.log(response);
+
+      return SoundInstance.decode(response);
+    } catch (e) {
+      return Left(e);
+    }
   };
-
-  try {
-    const response = await got.post(
-      `${FREESOUND_API_URL}/sounds/${id}`,
-      options,
-    );
-
-    return SoundInstance.decode(response);
-  } catch (e) {
-    return Left(e);
-  }
-};
 
 export { getAccessToken, getRandomSoundId, getSound };
