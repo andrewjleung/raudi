@@ -1,4 +1,4 @@
-import { array, Codec, GetType, number, string } from 'purify-ts';
+import { array, Codec, GetType, nullable, number, string } from 'purify-ts';
 
 const AccessTokenResponse = Codec.interface({
   access_token: string,
@@ -34,7 +34,7 @@ const SoundInstance = Codec.interface({
   name: string,
   tags: array(string),
   description: string,
-  geotag: string,
+  geotag: nullable(string),
   created: string,
   license: string,
   type: string,
