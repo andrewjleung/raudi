@@ -3,7 +3,7 @@ import Fastify from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
-import { authRoutes } from './routes/auth.js';
+import { authRoutes, useFreesound } from './routes/auth.js';
 import { soundsRoutes } from './routes/sounds.js';
 import { AccessTokenResponse } from './types.js';
 
@@ -35,7 +35,21 @@ const registerPlugins = () => {
 const registerRoutes = () => {
   fastify
     .register(authRoutes, { prefix: '/auth' })
-    .register(soundsRoutes, { prefix: '/sounds' });
+    .register(soundsRoutes, { prefix: '/sounds' })
+    // TODO: Replace this with a Me endpoint which will give back basic user
+    //       data stored in the auth cookie.
+    .register(
+      (fastify, _opts, done) => {
+        useFreesound(fastify);
+
+        fastify.get('/', async (_request, reply) => {
+          reply.code(200).send(true);
+        });
+
+        done();
+      },
+      { prefix: '/isloggedin' },
+    );
 };
 
 const start = async () => {

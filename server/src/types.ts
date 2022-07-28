@@ -28,7 +28,7 @@ const SoundInstancePreviews = Codec.interface({
 // });
 
 // https://freesound.org/docs/api/resources_apiv2.html#sound-instance
-const SoundInstance = Codec.interface({
+const FreesoundSoundInstance = Codec.interface({
   id: number,
   url: string,
   name: string,
@@ -64,6 +64,30 @@ const SoundInstance = Codec.interface({
   // ac_analysis: record(string, unknown),
 });
 
-type SoundInstance = GetType<typeof SoundInstance>;
+type FreesoundSoundInstance = GetType<typeof FreesoundSoundInstance>;
 
-export { AccessTokenResponse, SoundInstance };
+const FreesoundUserInstanceAvatar = Codec.interface({
+  small: string,
+  large: string,
+  medium: string,
+});
+
+const FreesoundUserInstance = Codec.interface({
+  url: string,
+  username: string,
+  about: string,
+  homepage: string,
+  avatar: FreesoundUserInstanceAvatar,
+  date_joined: string,
+  num_sounds: number,
+  sounds: string,
+  num_packs: number,
+  packs: string,
+  num_posts: number,
+  num_comments: number,
+  bookmark_categories: string,
+});
+
+type FreesoundUserInstance = GetType<typeof FreesoundUserInstance>;
+
+export { AccessTokenResponse, FreesoundSoundInstance, FreesoundUserInstance };

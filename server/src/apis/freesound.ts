@@ -1,6 +1,6 @@
-import { Either, Left, Maybe, Nothing, Right } from 'purify-ts';
+import { Either, Left, Right } from 'purify-ts';
 import got from 'got';
-import { AccessTokenResponse, SoundInstance } from '../types.js';
+import { AccessTokenResponse, FreesoundSoundInstance } from '../types.js';
 import { config } from '../config.js';
 
 const FREESOUND_URL = 'https://freesound.org';
@@ -8,7 +8,7 @@ const FREESOUND_API_URL = `${FREESOUND_URL}/apiv2`;
 
 const getAccessToken = async (
   authCode: string,
-): Promise<Maybe<AccessTokenResponse>> => {
+): Promise<Either<unknown, AccessTokenResponse>> => {
   const options = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
@@ -26,11 +26,9 @@ const getAccessToken = async (
       .post(`${FREESOUND_API_URL}/oauth2/access_token`, options)
       .json();
 
-    return AccessTokenResponse.decode(response).toMaybe();
+    return AccessTokenResponse.decode(response);
   } catch (e) {
-    // TODO: Implement more robust error handling. Currently this assumes the
-    // error is a grant error (auth code is expired).
-    return Nothing;
+    return Left(e);
   }
 };
 
@@ -50,9 +48,11 @@ const getRandomSoundId = async (): Promise<Either<unknown, string>> => {
 
 const getSound =
   (accessToken: string) =>
-  async (id: string): Promise<Either<unknown, SoundInstance>> => {
+  async (id: string): Promise<Either<unknown, FreesoundSoundInstance>> => {
     // Filter fields by those specified in the SoundInstance type.
-    const fields = Object.keys(SoundInstance.schema().properties || {});
+    const fields = Object.keys(
+      FreesoundSoundInstance.schema().properties || {},
+    );
 
     const options = {
       headers: {
@@ -70,7 +70,7 @@ const getSound =
 
       console.log(response);
 
-      return SoundInstance.decode(response);
+      return FreesoundSoundInstance.decode(response);
     } catch (e) {
       return Left(e);
     }

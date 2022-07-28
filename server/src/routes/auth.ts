@@ -52,11 +52,12 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       const maybeAccessTokenResponse = await getAccessToken(code);
 
       maybeAccessTokenResponse.map(accessTokenResponseToJwt(fastify)).caseOf({
-        Just: (jwt: string) => {
+        Left: () => reply.redirect(401, 'http://localhost:5173'), // TODO: send the user to a login page so they can login again
+        Right: (jwt: string) => {
           const expireDate = new Date();
           expireDate.setTime(expireDate.getTime() + ACCESS_DURATION_MS);
 
-          reply
+          return reply
             .setCookie(ACCESS_DATA_COOKIE, jwt, {
               path: '/',
               signed: true,
@@ -67,14 +68,9 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
             })
             .redirect(302, 'http://localhost:5173'); // TODO: Is this the right code?
         },
-        Nothing: () => reply.redirect(302, 'http://localhost:5173/sad'),
       });
     },
   );
-
-  fastify.get('/hello', async (request, reply) => {
-    reply.send('hello world!');
-  });
 
   done();
 };
@@ -96,7 +92,7 @@ const useFreesound = (fastify: FastifyInstance) =>
           refresh_token: decrypt(jwt.refresh_token),
         };
       })
-      .ifNothing(() => reply.code(401));
+      .ifNothing(() => reply.redirect(401, 'localhost:5173/login'));
 
     done();
   });
