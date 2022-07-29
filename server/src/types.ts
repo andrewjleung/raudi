@@ -1,13 +1,22 @@
 import { array, Codec, GetType, nullable, number, string } from 'purify-ts';
 
-const AccessTokenResponse = Codec.interface({
+const AccessTokenResponseProperties = {
   access_token: string,
   scope: string,
   expires_in: number,
   refresh_token: string,
-});
+};
+
+const AccessTokenResponse = Codec.interface(AccessTokenResponseProperties);
 
 type AccessTokenResponse = GetType<typeof AccessTokenResponse>;
+
+const AccessTokenJwtPayload = Codec.interface({
+  ...AccessTokenResponseProperties,
+  freesound_user_id: number,
+});
+
+type AccessTokenJwtPayload = GetType<typeof AccessTokenJwtPayload>;
 
 const SoundInstancePreviews = Codec.interface({
   'preview-hq-mp3': string,
@@ -72,11 +81,13 @@ const FreesoundUserInstanceAvatar = Codec.interface({
   medium: string,
 });
 
-const FreesoundUserInstance = Codec.interface({
+const FreesoundMeUserInstance = Codec.interface({
+  email: string,
+  unique_id: number,
   url: string,
   username: string,
   about: string,
-  homepage: string,
+  home_page: string,
   avatar: FreesoundUserInstanceAvatar,
   date_joined: string,
   num_sounds: number,
@@ -88,6 +99,11 @@ const FreesoundUserInstance = Codec.interface({
   bookmark_categories: string,
 });
 
-type FreesoundUserInstance = GetType<typeof FreesoundUserInstance>;
+type FreesoundMeUserInstance = GetType<typeof FreesoundMeUserInstance>;
 
-export { AccessTokenResponse, FreesoundSoundInstance, FreesoundUserInstance };
+export {
+  AccessTokenResponse,
+  AccessTokenJwtPayload,
+  FreesoundSoundInstance,
+  FreesoundMeUserInstance,
+};

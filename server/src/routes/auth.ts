@@ -1,10 +1,10 @@
-import { Maybe } from 'purify-ts';
+import { Either, EitherAsync } from 'purify-ts';
 import { config } from '../config.js';
-import { decrypt, encrypt } from '../encryption.js';
-import { getAccessToken } from '../apis/freesound.js';
+import { encrypt } from '../encryption.js';
+import { getAccessToken, getMe } from '../apis/freesound.js';
 import { FastifyInstance, FastifyPluginCallback } from 'fastify';
 import { Static, Type } from '@sinclair/typebox';
-import { AccessTokenResponse } from '../types.js';
+import { AccessTokenResponse, AccessTokenJwtPayload } from '../types.js';
 
 const AuthCode = Type.Object({
   code: Type.String(),
@@ -13,24 +13,38 @@ const AuthCode = Type.Object({
 type AuthCode = Static<typeof AuthCode>;
 
 const HOST_COOKIE_PREFIX = '__Host-';
-const ACCESS_DATA_COOKIE = `${HOST_COOKIE_PREFIX}accessData`;
+const JWT_COOKIE_NAME = `${HOST_COOKIE_PREFIX}accessData`;
 const ACCESS_DURATION_MS = 1 * 60 * 60 * 1000; // 1 hour.
 
-const accessTokenResponseToJwt =
+const makeAccessTokenJwt =
   (fastify: FastifyInstance) =>
-  (response: AccessTokenResponse): string => {
-    const { access_token, refresh_token, scope, expires_in } = response;
+  (payload: AccessTokenJwtPayload): string => {
+    const { access_token, refresh_token, expires_in } = payload;
 
     return fastify.jwt.sign(
       {
+        ...payload,
         access_token: encrypt(access_token),
         refresh_token: encrypt(refresh_token),
-        scope,
-        expires_in,
       },
       { expiresIn: expires_in },
     );
   };
+
+const makeAccessTokenJwtPayload = async (
+  response: AccessTokenResponse,
+): Promise<Either<unknown, AccessTokenJwtPayload>> => {
+  const eitherMeOrError = await getMe(response.access_token)();
+
+  eitherMeOrError.ifLeft((e) => {
+    console.log(e);
+  });
+
+  return eitherMeOrError.map((me) => ({
+    ...response,
+    freesound_user_id: me.unique_id,
+  }));
+};
 
 const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   fastify.get('/login', async (_request, reply) => {
@@ -47,54 +61,33 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
         querystring: AuthCode,
       },
     },
-    async (request, reply) => {
-      const { code } = request.query;
-      const maybeAccessTokenResponse = await getAccessToken(code);
+    async (request, reply) =>
+      EitherAsync.fromPromise(() => getAccessToken(request.query.code))
+        .chain(makeAccessTokenJwtPayload)
+        .map(makeAccessTokenJwt(fastify))
+        .caseOf({
+          Left: () => {
+            reply.code(401).send('Unauthorized');
+          },
+          Right: (jwt: string) => {
+            const expireDate = new Date();
+            expireDate.setTime(expireDate.getTime() + ACCESS_DURATION_MS);
 
-      maybeAccessTokenResponse.map(accessTokenResponseToJwt(fastify)).caseOf({
-        Left: () => reply.redirect(401, 'http://localhost:5173'), // TODO: send the user to a login page so they can login again
-        Right: (jwt: string) => {
-          const expireDate = new Date();
-          expireDate.setTime(expireDate.getTime() + ACCESS_DURATION_MS);
-
-          return reply
-            .setCookie(ACCESS_DATA_COOKIE, jwt, {
-              path: '/',
-              signed: true,
-              secure: true,
-              httpOnly: true,
-              sameSite: true,
-              expires: expireDate,
-            })
-            .redirect(302, 'http://localhost:5173'); // TODO: Is this the right code?
-        },
-      });
-    },
+            reply
+              .setCookie(JWT_COOKIE_NAME, jwt, {
+                path: '/',
+                signed: true,
+                secure: true,
+                httpOnly: true,
+                sameSite: true,
+                expires: expireDate,
+              })
+              .redirect(302, 'http://localhost:5173'); // TODO: Is this the right code?
+          },
+        }),
   );
 
   done();
 };
 
-const useFreesound = (fastify: FastifyInstance) =>
-  fastify.addHook('preValidation', (request, reply, done) => {
-    const maybeCookie = Maybe.fromNullable(request.cookies[ACCESS_DATA_COOKIE]);
-
-    maybeCookie
-      .chainNullable((cookie) => reply.unsignCookie(cookie).value)
-      .ifJust(fastify.jwt.verify)
-      .chainNullable((cookie) => fastify.jwt.decode<object>(cookie))
-      .chain((jwt) => AccessTokenResponse.decode(jwt).toMaybe())
-      .ifJust((jwt) => {
-        request.freesound = {
-          ...jwt,
-          access_token: decrypt(jwt.access_token),
-          // TODO: Check for access token expiry and request a new one with refresh token?
-          refresh_token: decrypt(jwt.refresh_token),
-        };
-      })
-      .ifNothing(() => reply.redirect(401, 'localhost:5173/login'));
-
-    done();
-  });
-
-export { authRoutes, useFreesound };
+export { authRoutes, JWT_COOKIE_NAME };

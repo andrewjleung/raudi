@@ -3,9 +3,10 @@ import Fastify from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
-import { authRoutes, useFreesound } from './routes/auth.js';
 import { soundsRoutes } from './routes/sounds.js';
-import { AccessTokenResponse } from './types.js';
+import { AccessTokenJwtPayload } from './types.js';
+import { authRoutes } from './routes/auth.js';
+import useJwt from './hooks/useJwt.js';
 
 // TODO: Don't use `Maybe` for error handling. Use `Either`!
 // TODO: Make sure that exceptions will be properly handled for things like
@@ -13,7 +14,7 @@ import { AccessTokenResponse } from './types.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
-    freesound: AccessTokenResponse;
+    freesound?: AccessTokenJwtPayload;
   }
 }
 
@@ -21,6 +22,7 @@ const fastify = Fastify({
   logger: true,
 }).withTypeProvider<TypeBoxTypeProvider>();
 
+// TODO: Configure CORS.
 const registerPlugins = () => {
   fastify
     .register(fastifyJwt, {
@@ -36,20 +38,18 @@ const registerRoutes = () => {
   fastify
     .register(authRoutes, { prefix: '/auth' })
     .register(soundsRoutes, { prefix: '/sounds' })
-    // TODO: Replace this with a Me endpoint which will give back basic user
-    //       data stored in the auth cookie.
-    .register(
-      (fastify, _opts, done) => {
-        useFreesound(fastify);
+    .get('/me', (request, reply) => {
+      if (request.freesound === undefined) {
+        reply.code(401).send('Unauthorized.');
+      } else {
+        reply.code(200).send(request.freesound?.freesound_user_id);
+      }
+    });
+};
 
-        fastify.get('/', async (_request, reply) => {
-          reply.code(200).send(true);
-        });
-
-        done();
-      },
-      { prefix: '/isloggedin' },
-    );
+const registerHooks = () => {
+  // TODO: It would be preferable for this hook to live elsewhere.
+  fastify.addHook('preValidation', useJwt(fastify));
 };
 
 const start = async () => {
@@ -63,4 +63,5 @@ const start = async () => {
 
 registerPlugins();
 registerRoutes();
+registerHooks();
 start();

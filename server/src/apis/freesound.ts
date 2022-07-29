@@ -1,6 +1,10 @@
 import { Either, Left, Right } from 'purify-ts';
 import got from 'got';
-import { AccessTokenResponse, FreesoundSoundInstance } from '../types.js';
+import {
+  AccessTokenResponse,
+  FreesoundSoundInstance,
+  FreesoundMeUserInstance,
+} from '../types.js';
 import { config } from '../config.js';
 
 const FREESOUND_URL = 'https://freesound.org';
@@ -55,6 +59,7 @@ const getSound =
     );
 
     const options = {
+      // TODO: Make a `got` instance so this doesn't need to be manually specified.
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -68,12 +73,28 @@ const getSound =
         .get(`${FREESOUND_API_URL}/sounds/${id}`, options)
         .json();
 
-      console.log(response);
-
       return FreesoundSoundInstance.decode(response);
     } catch (e) {
       return Left(e);
     }
   };
 
-export { getAccessToken, getRandomSoundId, getSound };
+const getMe =
+  (accessToken: string) =>
+  async (): Promise<Either<unknown, FreesoundMeUserInstance>> => {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    try {
+      const response = await got.get(`${FREESOUND_API_URL}/me`, options).json();
+
+      return FreesoundMeUserInstance.decode(response);
+    } catch (e) {
+      return Left(e);
+    }
+  };
+
+export { getAccessToken, getRandomSoundId, getSound, getMe };
