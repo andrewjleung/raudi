@@ -48,7 +48,6 @@ const registerRoutes = () => {
 };
 
 const registerHooks = () => {
-  // TODO: It would be preferable for this hook to live elsewhere.
   fastify.addHook('preValidation', useJwt(fastify));
 };
 

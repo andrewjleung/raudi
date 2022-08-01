@@ -6,15 +6,15 @@ import { FastifyInstance, FastifyPluginCallback } from 'fastify';
 import { Static, Type } from '@sinclair/typebox';
 import { AccessTokenResponse, AccessTokenJwtPayload } from '../types.js';
 
+const HOST_COOKIE_PREFIX = '__Host-';
+const JWT_COOKIE_NAME = `${HOST_COOKIE_PREFIX}accessData`;
+const ACCESS_DURATION_MS = 1 * 60 * 60 * 1000; // 1 hour.
+
 const AuthCode = Type.Object({
   code: Type.String(),
 });
 
 type AuthCode = Static<typeof AuthCode>;
-
-const HOST_COOKIE_PREFIX = '__Host-';
-const JWT_COOKIE_NAME = `${HOST_COOKIE_PREFIX}accessData`;
-const ACCESS_DURATION_MS = 1 * 60 * 60 * 1000; // 1 hour.
 
 const makeAccessTokenJwt =
   (fastify: FastifyInstance) =>
@@ -35,10 +35,6 @@ const makeAccessTokenJwtPayload = async (
   response: AccessTokenResponse,
 ): Promise<Either<unknown, AccessTokenJwtPayload>> => {
   const eitherMeOrError = await getMe(response.access_token)();
-
-  eitherMeOrError.ifLeft((e) => {
-    console.log(e);
-  });
 
   return eitherMeOrError.map((me) => ({
     ...response,
@@ -82,7 +78,7 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
                 sameSite: true,
                 expires: expireDate,
               })
-              .redirect(302, 'http://localhost:5173'); // TODO: Is this the right code?
+              .redirect(302, 'http://localhost:5173');
           },
         }),
   );
