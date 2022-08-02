@@ -79,6 +79,22 @@ const getSound =
     }
   };
 
+const getRandomSounds =
+  (accessToken: string) =>
+  async (
+    amount: number,
+  ): Promise<Either<unknown, Array<FreesoundSoundInstance>>> => {
+    const ids = await Promise.all(
+      [...Array(amount)].map(() => getRandomSoundId()),
+    );
+
+    const sounds = await Promise.all(
+      Either.rights(ids).map(getSound(accessToken)),
+    );
+
+    return Either.sequence(sounds);
+  };
+
 const getMe =
   (accessToken: string) =>
   async (): Promise<Either<unknown, FreesoundMeUserInstance>> => {
@@ -97,4 +113,4 @@ const getMe =
     }
   };
 
-export { getAccessToken, getRandomSoundId, getSound, getMe };
+export { getAccessToken, getRandomSoundId, getSound, getRandomSounds, getMe };

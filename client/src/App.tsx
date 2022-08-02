@@ -34,6 +34,15 @@ const App = () => {
       >
         Get a random sound!
       </Button>
+      <Button
+        onClick={() => {
+          window.location.replace(
+            `http://localhost:3000/sounds/randomSounds?amount=5`,
+          );
+        }}
+      >
+        Get five random sounds!
+      </Button>
     </>
   );
 };
