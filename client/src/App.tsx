@@ -1,25 +1,8 @@
 import { Button, Spinner } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useLogin } from './hooks/useLogin';
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const checkLogin = async () => {
-      const response = await fetch('http://localhost:3000/me', {
-        credentials: 'include',
-      });
-
-      if (response.status !== 200) {
-        window.location.replace(`http://localhost:5173/login`);
-        return;
-      }
-
-      setIsLoggedIn(true);
-    };
-
-    checkLogin();
-  }, [setIsLoggedIn]);
+  const isLoggedIn = useLogin();
 
   if (!isLoggedIn) {
     return <Spinner />;
