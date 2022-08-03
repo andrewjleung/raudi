@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 enum LoginState {
   Unknown = 'unknown', // Upon first load of application, need to confirm login manually.
@@ -23,8 +22,6 @@ const LoginContext = createContext<LoginContext>(DEFAULT_LOGIN_CONTEXT);
 
 const useLogin = () => {
   const { loginState, setLoginState } = useContext(LoginContext);
-  const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLoginState = async () => {
@@ -41,12 +38,8 @@ const useLogin = () => {
         fetchLoginState().then(setLoginState);
         break;
       case LoginState.LoggedIn:
-        if (location.pathname === '/login') {
-          navigate('/');
-        }
         break;
       case LoginState.LoggedOut:
-        navigate('/login');
         break;
       default:
         setLoginState(LoginState.Unknown);

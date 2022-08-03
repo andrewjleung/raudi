@@ -5,7 +5,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
 import { LoginContext, LoginState } from './hooks/useLogin';
 import './index.css';
-import Login from './routes/login';
 
 const Main = () => {
   const [loginState, setLoginState] = useState<LoginState>(LoginState.Unknown);
@@ -17,7 +16,6 @@ const Main = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<App />} />
-              <Route path="/login" element={<Login />} />
             </Routes>
           </BrowserRouter>
         </ChakraProvider>
