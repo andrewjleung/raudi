@@ -1,14 +1,17 @@
 // TODO: add key listeners to map certain functions to expected keys
 
-type ControlsProps = React.PropsWithChildren<{
+import { Spinner } from '@chakra-ui/spinner';
+
+type ControlsProps = {
   canPlayThrough: boolean;
-}>;
+  children: React.ReactNode;
+};
 
 export default ({ canPlayThrough, children }: ControlsProps) => {
   if (!canPlayThrough) {
     // TODO: loading indicator
-    return null;
+    return <Spinner />;
   }
 
-  return children;
+  return <>children</>;
 };
