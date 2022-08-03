@@ -7,7 +7,11 @@ const NOOP = () => {};
 
 const DEFAULT_VOLUME = 30;
 
-export default ({ src }) => {
+type PlayerProps = {
+  src: string;
+};
+
+export default ({ src }: PlayerProps) => {
   const audioRef = useRef<HTMLMediaElement>(null);
   const [canPlayThrough, setCanPlayThrough] = useState(false);
   const [playing, setPlaying] = useState(false);

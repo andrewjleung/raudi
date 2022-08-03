@@ -7,7 +7,12 @@ import {
   SliderThumb,
 } from '@chakra-ui/react';
 
-export default ({ volume, setVolume }) => {
+type VolumeSliderProps = {
+  volume: number;
+  setVolume: (value: number) => void;
+};
+
+export default ({ volume, setVolume }: VolumeSliderProps) => {
   const [showVolumeTooltip, setShowVolumeTooltip] = useState(false);
 
   return (

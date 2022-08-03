@@ -6,7 +6,12 @@ import {
   SliderThumb,
 } from '@chakra-ui/react';
 
-export default ({ currentTime, setCurrentTime }) => (
+type ScrubberProps = {
+  currentTime: number;
+  setCurrentTime: (value: number) => void;
+};
+
+export default ({ currentTime, setCurrentTime }: ScrubberProps) => (
   <Slider
     aria-label="Media scrubber"
     defaultValue={currentTime}
