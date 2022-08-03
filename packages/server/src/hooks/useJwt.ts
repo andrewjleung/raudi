@@ -11,7 +11,7 @@ import { Maybe } from 'purify-ts';
 import { decrypt } from '../encryption.js';
 import { encaseNullable } from '../utils/purify-utils.js';
 import { JWT_COOKIE_NAME } from '../routes/auth.js';
-import { AccessTokenJwtPayload } from '../types.js';
+import { AccessTokenJwtPayload } from '@raudi/types';
 
 const useJwt =
   (

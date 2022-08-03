@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 
-type RaudiConfig = {
+export type RaudiConfig = {
   freesoundClientId: string;
   freesoundClientSecret: string;
 };
@@ -27,9 +27,7 @@ const getEnvOrExit = (key: string): string => {
   return maybeValue;
 };
 
-const config: RaudiConfig = {
+export const config: RaudiConfig = {
   freesoundClientId: getEnvOrExit('FREESOUND_CLIENT_ID'),
   freesoundClientSecret: getEnvOrExit('FREESOUND_CLIENT_SECRET'),
 };
-
-export { RaudiConfig, config };

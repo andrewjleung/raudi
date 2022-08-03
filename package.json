@@ -1,11 +1,11 @@
 {
   "name": "raudi",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "workspaces": [
-    "client",
-    "server"
+    "./packages/*"
   ],
   "scripts": {
-    "client": "npm run dev --prefix client"
+    "client": "npm run dev --prefix packages/client",
+    "server": "npm run dev --prefix packages/server"
   }
 }

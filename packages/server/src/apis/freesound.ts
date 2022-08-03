@@ -4,7 +4,7 @@ import {
   AccessTokenResponse,
   FreesoundSoundInstance,
   FreesoundMeUserInstance,
-} from '../types.js';
+} from '@raudi/types';
 import { config } from '../config.js';
 
 const FREESOUND_URL = 'https://freesound.org';

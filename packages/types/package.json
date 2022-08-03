@@ -1,0 +1,9 @@
+{
+  "name": "@raudi/types",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "typescript": "^4.7.4"
+  }
+}

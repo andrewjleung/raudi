@@ -1,4 +1,4 @@
-import { array, Codec, GetType, nullable, number, string } from 'purify-ts';
+import { array, Codec, GetType, nullable, number, string } from "purify-ts";
 
 const AccessTokenResponseProperties = {
   access_token: string,
@@ -19,10 +19,10 @@ const AccessTokenJwtPayload = Codec.interface({
 type AccessTokenJwtPayload = GetType<typeof AccessTokenJwtPayload>;
 
 const SoundInstancePreviews = Codec.interface({
-  'preview-hq-mp3': string,
-  'preview-lq-mp3': string,
-  'preview-hq-ogg': string,
-  'preview-lq-ogg': string,
+  "preview-hq-mp3": string,
+  "preview-lq-mp3": string,
+  "preview-hq-ogg": string,
+  "preview-lq-ogg": string,
 });
 
 // const SoundInstanceImages = Codec.interface({

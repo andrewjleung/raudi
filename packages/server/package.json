@@ -1,7 +1,6 @@
 {
-  "name": "raudi-server",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@raudi/server",
+  "version": "0.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -29,6 +28,7 @@
   },
   "type": "module",
   "devDependencies": {
+    "@raudi/types": "*",
     "@types/jest": "^28.1.5",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",

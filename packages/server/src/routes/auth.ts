@@ -4,7 +4,7 @@ import { encrypt } from '../encryption.js';
 import { getAccessToken, getMe } from '../apis/freesound.js';
 import { FastifyInstance, FastifyPluginCallback } from 'fastify';
 import { Static, Type } from '@sinclair/typebox';
-import { AccessTokenResponse, AccessTokenJwtPayload } from '../types.js';
+import { AccessTokenResponse, AccessTokenJwtPayload } from '@raudi/types';
 
 const HOST_COOKIE_PREFIX = '__Host-';
 const JWT_COOKIE_NAME = `${HOST_COOKIE_PREFIX}accessData`;

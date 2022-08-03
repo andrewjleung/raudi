@@ -4,7 +4,7 @@ import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { soundsRoutes } from './routes/sounds.js';
-import { AccessTokenJwtPayload } from './types.js';
+import { AccessTokenJwtPayload } from '@raudi/types';
 import { authRoutes } from './routes/auth.js';
 import useJwt from './hooks/useJwt.js';
 
