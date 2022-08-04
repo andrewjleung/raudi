@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react';
-import Player from './components/Player';
+import { FreesoundSoundInstance } from '@raudi/types';
 import { Sound } from './components/Sound';
 import { useLogin } from './hooks/useLogin';
 

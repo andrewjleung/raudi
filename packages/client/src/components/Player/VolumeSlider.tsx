@@ -6,13 +6,14 @@ import {
   SliderFilledTrack,
   SliderThumb,
 } from '@chakra-ui/react';
+import { State } from '../../types';
 
 type VolumeSliderProps = {
-  volume: number;
-  setVolume: (value: number) => void;
+  Volume: State<number>;
 };
 
-export default ({ volume, setVolume }: VolumeSliderProps) => {
+export default ({ Volume }: VolumeSliderProps) => {
+  const [volume, setVolume] = Volume;
   const [showVolumeTooltip, setShowVolumeTooltip] = useState(false);
 
   return (
@@ -27,7 +28,6 @@ export default ({ volume, setVolume }: VolumeSliderProps) => {
         <SliderFilledTrack />
       </SliderTrack>
       <Tooltip
-        // TODO: style
         bg="teal.500"
         color="white"
         placement="top"

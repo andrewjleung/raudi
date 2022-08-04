@@ -3,15 +3,14 @@
 import { Spinner } from '@chakra-ui/spinner';
 
 type ControlsProps = {
-  canPlayThrough: boolean;
+  canPlay: boolean;
   children: React.ReactNode;
 };
 
-export default ({ canPlayThrough, children }: ControlsProps) => {
-  if (!canPlayThrough) {
-    // TODO: loading indicator
+export default ({ canPlay, children }: ControlsProps) => {
+  if (!canPlay) {
     return <Spinner />;
   }
 
-  return <>children</>;
+  return <>{children}</>;
 };
