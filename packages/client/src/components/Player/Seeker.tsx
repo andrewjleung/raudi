@@ -8,6 +8,8 @@ import {
 import { useMemo, useState } from 'react';
 import { Setter, State } from '../../types';
 
+const SLIDER_STEP = 0.01;
+
 type HoursMinutesSeconds = {
   hours: number;
   minutes: number;
@@ -99,7 +101,7 @@ export default ({
       <Slider
         aria-label="Seeker"
         defaultValue={0}
-        step={0.01}
+        step={SLIDER_STEP}
         value={progress}
         onChange={onChange}
         onMouseEnter={onMouseEnter}
@@ -120,7 +122,7 @@ export default ({
           <SliderThumb />
         </Tooltip>
       </Slider>
-      {formattedTime}
+      {formattedTime} / {getFormattedTime(duration)}
     </>
   );
 };

@@ -8,6 +8,8 @@ import {
 } from '@chakra-ui/react';
 import { State } from '../../types';
 
+const SLIDER_STEP = 0.01;
+
 type VolumeSliderProps = {
   Volume: State<number>;
 };
@@ -19,10 +21,12 @@ export default ({ Volume }: VolumeSliderProps) => {
   return (
     <Slider
       aria-label="Volume slider"
+      // TODO: Remember volume when switching sounds.
       defaultValue={volume}
       onChange={(v) => setVolume(v)}
       onMouseEnter={() => setShowVolumeTooltip(true)}
       onMouseLeave={() => setShowVolumeTooltip(false)}
+      step={SLIDER_STEP}
     >
       <SliderTrack>
         <SliderFilledTrack />
@@ -32,7 +36,7 @@ export default ({ Volume }: VolumeSliderProps) => {
         color="white"
         placement="top"
         isOpen={showVolumeTooltip}
-        label={`${volume}%`}
+        label={`${Math.round(volume)}%`}
       >
         <SliderThumb />
       </Tooltip>
