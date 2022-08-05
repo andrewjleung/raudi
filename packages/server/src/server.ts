@@ -8,10 +8,6 @@ import { AccessTokenJwtPayload } from '@raudi/types';
 import { authRoutes } from './routes/auth.js';
 import useJwt from './hooks/useJwt.js';
 
-// TODO: Don't use `Maybe` for error handling. Use `Either`!
-// TODO: Make sure that exceptions will be properly handled for things like
-//       decryption, JWT verifications, auth code timeout, access token timeout
-
 declare module 'fastify' {
   interface FastifyRequest {
     freesound?: AccessTokenJwtPayload;
