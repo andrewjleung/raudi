@@ -2,6 +2,7 @@ import { Button, Spinner } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
 import { Maybe, Nothing } from 'purify-ts';
 import { useEffect, useState } from 'react';
+import { fetchSound } from './api/sounds';
 import { Sound } from './components/Sound';
 import { useLogin } from './hooks/useLogin';
 
@@ -50,25 +51,12 @@ const App = () => {
   const [sound, setSound] = useState<Maybe<FreesoundSoundInstance>>(Nothing);
 
   useEffect(() => {
-    const fetchSound = async () => {
-      if (isLoggedIn) {
-        const response = await fetch('http://localhost:3000/sounds/random', {
-          credentials: 'include',
-        }).then((response) => response.json());
+    if (!isLoggedIn) {
+      return;
+    }
 
-        if (response.status != 200) {
-          // TODO: Handle error.
-          console.log(response.statusText);
-        }
-
-        setSound(
-          FreesoundSoundInstance.decode(response).ifLeft(console.log).toMaybe(),
-        );
-      }
-    };
-
-    fetchSound();
-  }, [isLoggedIn]);
+    fetchSound().then(setSound);
+  }, [isLoggedIn, setSound]);
 
   if (!isLoggedIn) {
     return (
@@ -82,10 +70,22 @@ const App = () => {
     );
   }
 
-  return sound.caseOf({
-    Just: (sound) => <Sound sound={sound} />,
-    Nothing: () => <Spinner />, // TODO: create a failure page.
-  });
+  return (
+    <>
+      <Button
+        onClick={() => {
+          setSound(Nothing);
+          fetchSound().then(setSound);
+        }}
+      >
+        Next
+      </Button>
+      {sound.caseOf({
+        Just: (sound) => <Sound sound={sound} />,
+        Nothing: () => <Spinner />, // TODO: create a failure page.
+      })}
+    </>
+  );
 };
 
 export default App;
