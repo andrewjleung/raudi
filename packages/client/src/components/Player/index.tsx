@@ -4,14 +4,16 @@ import PlayPauseButton from './PlayPauseButton';
 import Seeker from './Seeker';
 import VolumeSlider from './VolumeSlider';
 
-const NOOP = () => {};
-const DEFAULT_VOLUME = 30;
+const NOOP = () => {
+  return;
+};
+const DEFAULT_VOLUME = 50;
 
 type PlayerProps = {
   src: string;
 };
 
-export default ({ src }: PlayerProps) => {
+export default function Player({ src }: PlayerProps) {
   const audioRef = useRef<HTMLMediaElement>(null);
 
   const CanPlay = useState(false);
@@ -28,6 +30,12 @@ export default ({ src }: PlayerProps) => {
   const [time, setTime] = Time;
   const [duration, setDuration] = Duration;
   const [progress, setProgress] = Progress;
+
+  useEffect(() => {
+    setPlaying(false);
+    setTime(0);
+    setProgress(0);
+  }, [src, setPlaying, setTime, setProgress]);
 
   useEffect(() => {
     if (audioRef.current === null) {
@@ -116,4 +124,4 @@ export default ({ src }: PlayerProps) => {
       />
     </>
   );
-};
+}

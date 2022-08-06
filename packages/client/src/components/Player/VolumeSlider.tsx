@@ -14,7 +14,7 @@ type VolumeSliderProps = {
   Volume: State<number>;
 };
 
-export default ({ Volume }: VolumeSliderProps) => {
+export default function VolumeSlider({ Volume }: VolumeSliderProps) {
   const [volume, setVolume] = Volume;
   const [showVolumeTooltip, setShowVolumeTooltip] = useState(false);
 
@@ -42,4 +42,4 @@ export default ({ Volume }: VolumeSliderProps) => {
       </Tooltip>
     </Slider>
   );
-};
+}

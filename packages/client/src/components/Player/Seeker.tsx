@@ -46,13 +46,13 @@ type ScrubberProps = {
   Playing: State<boolean>;
 };
 
-export default ({
+export default function Seeker({
   duration,
   progress,
   setTime,
   Seeking,
   Playing,
-}: ScrubberProps) => {
+}: ScrubberProps) {
   const [seeking, setSeeking] = Seeking;
   const [playing, setPlaying] = Playing;
 
@@ -125,4 +125,4 @@ export default ({
       {formattedTime} / {getFormattedTime(duration)}
     </>
   );
-};
+}

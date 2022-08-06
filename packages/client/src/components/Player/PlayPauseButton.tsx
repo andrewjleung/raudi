@@ -5,7 +5,7 @@ type PlayPauseButtonProps = {
   Playing: State<boolean>;
 };
 
-export default ({ Playing }: PlayPauseButtonProps) => {
+export default function PlayPauseButton({ Playing }: PlayPauseButtonProps) {
   const [playing, setPlaying] = Playing;
 
   return (
@@ -13,4 +13,4 @@ export default ({ Playing }: PlayPauseButtonProps) => {
       {playing ? 'Pause' : 'Play'}
     </Button>
   );
-};
+}

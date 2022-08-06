@@ -7,10 +7,10 @@ type ControlsProps = {
   children: React.ReactNode;
 };
 
-export default ({ canPlay, children }: ControlsProps) => {
+export default function Controls({ canPlay, children }: ControlsProps) {
   if (!canPlay) {
     return <Spinner />;
   }
 
   return <>{children}</>;
-};
+}

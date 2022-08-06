@@ -1,62 +1,37 @@
 import { Button, Spinner } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
-import { Maybe, Nothing } from 'purify-ts';
 import { useEffect, useState } from 'react';
-import { fetchSound } from './api/sounds';
+import { fetchSounds } from './api/sounds';
 import { Sound } from './components/Sound';
 import { useLogin } from './hooks/useLogin';
 
-const mockSound: FreesoundSoundInstance = {
-  id: 578209,
-  url: 'https://freesound.org/people/Buckine/sounds/578209/',
-  name: 'AG The Rock 120bpm 002.wav',
-  tags: [
-    'loop',
-    'percussion-loop',
-    'drums',
-    'FX',
-    'beat',
-    'percussion',
-    'drum-loop',
-    'drum',
-  ],
-  description:
-    'Mangled loop originated from The  Rock 0001 using FX, chopping, looping',
-  geotag: null,
-  created: '2021-06-27T23:52:11',
-  license: 'https://creativecommons.org/licenses/by/4.0/',
-  type: 'wav',
-  channels: 2,
-  filesize: 1411620,
-  bitrate: 0,
-  bitdepth: 16,
-  duration: 8,
-  samplerate: 44100,
-  username: 'Buckine',
-  download: 'https://freesound.org/apiv2/sounds/578209/download/',
-  previews: {
-    'preview-hq-mp3':
-      'https://cdn.freesound.org/previews/578/578209_11834494-hq.mp3',
-    'preview-lq-mp3':
-      'https://cdn.freesound.org/previews/578/578209_11834494-lq.mp3',
-    'preview-hq-ogg':
-      'https://cdn.freesound.org/previews/578/578209_11834494-hq.ogg',
-    'preview-lq-ogg':
-      'https://cdn.freesound.org/previews/578/578209_11834494-lq.ogg',
-  },
-};
+const STAYAHEAD_COUNT = 15;
 
 const App = () => {
   const isLoggedIn = useLogin();
-  const [sound, setSound] = useState<Maybe<FreesoundSoundInstance>>(Nothing);
+  const [sounds, setSounds] = useState<FreesoundSoundInstance[]>([]);
+  const [cursor, setCursor] = useState(0);
+  const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (
+      !isLoggedIn ||
+      isFetching ||
+      sounds.length - cursor >= STAYAHEAD_COUNT
+    ) {
       return;
     }
 
-    fetchSound().then(setSound);
-  }, [isLoggedIn, setSound]);
+    setIsFetching(true);
+    fetchSounds().then((maybeSounds) => {
+      setIsFetching(false);
+
+      return maybeSounds.caseOf({
+        Just: (newSounds) => setSounds((sounds) => sounds.concat(newSounds)),
+        Nothing: () => {},
+      });
+    });
+  }, [cursor, isFetching, isLoggedIn, sounds]);
 
   if (!isLoggedIn) {
     return (
@@ -72,18 +47,21 @@ const App = () => {
 
   return (
     <>
-      <Button
-        onClick={() => {
-          setSound(Nothing);
-          fetchSound().then(setSound);
-        }}
-      >
-        Next
-      </Button>
-      {sound.caseOf({
-        Just: (sound) => <Sound sound={sound} />,
-        Nothing: () => <Spinner />, // TODO: create a failure page.
-      })}
+      {sounds.length} sounds Cursor: {cursor}
+      {cursor < sounds.length - 1 ? (
+        <Button
+          onClick={() => {
+            if (cursor < sounds.length - 1) {
+              setCursor((cursor) => cursor + 1);
+            }
+          }}
+        >
+          Next
+        </Button>
+      ) : (
+        <Spinner />
+      )}
+      {sounds.length > 0 ? <Sound sound={sounds[cursor]} /> : <Spinner />}
     </>
   );
 };
