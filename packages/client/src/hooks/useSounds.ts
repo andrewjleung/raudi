@@ -1,7 +1,7 @@
 import { FreesoundSoundInstance } from '@raudi/types';
 import { Just, Maybe, Nothing } from 'purify-ts';
 import { useEffect, useState } from 'react';
-import { fetchSounds } from '../api/sounds';
+import { fetchSounds } from '../api/soundsApi';
 
 const STAYAHEAD_COUNT = 15;
 
