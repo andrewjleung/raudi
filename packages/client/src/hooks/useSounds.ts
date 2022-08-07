@@ -12,6 +12,8 @@ export type UseSounds = {
   isFetching: boolean;
 };
 
+// TODO: Cleanup sounds after a certain threshold, currently they will keep
+//       building up forever.
 export const useSounds = (
   isLoggedIn: boolean,
   stayAheadCount: number = STAYAHEAD_COUNT,

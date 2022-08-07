@@ -25,16 +25,16 @@ const SoundInstancePreviews = Codec.interface({
   "preview-lq-ogg": string,
 });
 
-// const SoundInstanceImages = Codec.interface({
-//   spectral_m: string,
-//   spectral_l: string,
-//   spectral_bw_l: string,
-//   waveform_bw_m: string,
-//   waveform_bw_l: string,
-//   waveform_l: string,
-//   waveform_m: string,
-//   spectral_bw_m: string,
-// });
+const SoundInstanceImages = Codec.interface({
+  spectral_m: string,
+  spectral_l: string,
+  spectral_bw_l: string,
+  waveform_bw_m: string,
+  waveform_bw_l: string,
+  waveform_l: string,
+  waveform_m: string,
+  spectral_bw_m: string,
+});
 
 // https://freesound.org/docs/api/resources_apiv2.html#sound-instance
 const FreesoundSoundInstance = Codec.interface({
@@ -58,7 +58,7 @@ const FreesoundSoundInstance = Codec.interface({
   download: string,
   // bookmark: string,
   previews: SoundInstancePreviews,
-  // images: SoundInstanceImages,
+  images: SoundInstanceImages,
   // num_downloads: number,
   // avg_rating: number,
   // num_ratings: number,
