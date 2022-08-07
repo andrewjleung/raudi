@@ -21,7 +21,6 @@ export default function VolumeSlider({ Volume }: VolumeSliderProps) {
   return (
     <Slider
       aria-label="Volume slider"
-      // TODO: Remember volume when switching sounds.
       defaultValue={volume}
       onChange={(v) => setVolume(v)}
       onMouseEnter={() => setShowVolumeTooltip(true)}

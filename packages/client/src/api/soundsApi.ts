@@ -10,9 +10,11 @@ export const fetchSounds = async (): Promise<
       credentials: 'include',
     }).then((response) => response.json());
 
-    return Either.sequence(
-      (response as Array<unknown>).map(FreesoundSoundInstance.decode),
-    );
+    if (!Array.isArray(response)) {
+      return Left(Error('Random sounds response is not an array.'));
+    }
+
+    return Either.sequence(response.map(FreesoundSoundInstance.decode));
   } catch (e) {
     return Left(e);
   }
