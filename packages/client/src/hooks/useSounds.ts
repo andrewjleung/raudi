@@ -2,6 +2,7 @@ import { FreesoundSoundInstance } from '@raudi/types';
 import { Just, Maybe, Nothing } from 'purify-ts';
 import { useEffect, useState } from 'react';
 import { fetchSounds } from '../api/soundsApi';
+import { useAuthorizedFetch } from './useAuthorizedFetch';
 
 const STAYAHEAD_COUNT = 15;
 
@@ -21,6 +22,7 @@ export const useSounds = (
   const [sounds, setSounds] = useState<Array<FreesoundSoundInstance>>([]);
   const [cursor, setCursor] = useState(0);
   const [isFetching, setIsFetching] = useState(false);
+  const authorizedFetch = useAuthorizedFetch();
 
   useEffect(() => {
     const isAhead = sounds.length - cursor >= stayAheadCount;
@@ -31,7 +33,7 @@ export const useSounds = (
 
     const fetchAndSetSounds = async () => {
       setIsFetching(true);
-      const errOrSounds = await fetchSounds();
+      const errOrSounds = await fetchSounds(authorizedFetch);
 
       // TODO: Do something if no sounds are retrieved, somehow retry?
       errOrSounds.ifRight((newSounds) =>
@@ -41,7 +43,14 @@ export const useSounds = (
     };
 
     fetchAndSetSounds();
-  }, [cursor, isFetching, isLoggedIn, sounds.length, stayAheadCount]);
+  }, [
+    authorizedFetch,
+    cursor,
+    isFetching,
+    isLoggedIn,
+    sounds.length,
+    stayAheadCount,
+  ]);
 
   const canGetNextSound = cursor < sounds.length - 1;
 

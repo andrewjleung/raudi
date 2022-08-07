@@ -20,7 +20,7 @@ const DEFAULT_LOGIN_CONTEXT: LoginContext = {
 
 const LoginContext = createContext<LoginContext>(DEFAULT_LOGIN_CONTEXT);
 
-const useLogin = () => {
+const useLogin = (): boolean => {
   const { loginState, setLoginState } = useContext(LoginContext);
 
   useEffect(() => {

@@ -1,14 +1,14 @@
 import { FreesoundSoundInstance } from '@raudi/types';
 import { Either, Left } from 'purify-ts';
+import { AuthorizedFetch } from '../hooks/useAuthorizedFetch';
 
-export const fetchSounds = async (): Promise<
-  Either<unknown, FreesoundSoundInstance[]>
-> => {
+export const fetchSounds = async (
+  authorizedFetch: AuthorizedFetch,
+): Promise<Either<unknown, FreesoundSoundInstance[]>> => {
   try {
-    // TODO: Handle unauthorized.
-    const response = await fetch('http://localhost:3000/sounds/random', {
-      credentials: 'include',
-    }).then((response) => response.json());
+    const response = await authorizedFetch(
+      'http://localhost:3000/sounds/random',
+    ).then((response) => response.json());
 
     if (!Array.isArray(response)) {
       return Left(Error('Random sounds response is not an array.'));
