@@ -1,37 +1,34 @@
 import { Button, Spinner } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
-import { useEffect, useState } from 'react';
-import { fetchSounds } from './api/sounds';
+import { useCallback } from 'react';
 import { Sound } from './components/Sound';
 import { useLogin } from './hooks/useLogin';
-
-const STAYAHEAD_COUNT = 15;
+import { useSounds } from './hooks/useSounds';
 
 const App = () => {
   const isLoggedIn = useLogin();
-  const [sounds, setSounds] = useState<FreesoundSoundInstance[]>([]);
-  const [cursor, setCursor] = useState(0);
-  const [isFetching, setIsFetching] = useState(false);
+  const { sound, getNextSound, canGetNextSound } = useSounds(isLoggedIn);
 
-  useEffect(() => {
-    if (
-      !isLoggedIn ||
-      isFetching ||
-      sounds.length - cursor >= STAYAHEAD_COUNT
-    ) {
-      return;
-    }
+  const NoSounds = () => (
+    <>
+      Loading sounds...
+      <Spinner />
+    </>
+  );
 
-    setIsFetching(true);
-    fetchSounds().then((maybeSounds) => {
-      setIsFetching(false);
-
-      return maybeSounds.caseOf({
-        Just: (newSounds) => setSounds((sounds) => sounds.concat(newSounds)),
-        Nothing: () => {},
-      });
-    });
-  }, [cursor, isFetching, isLoggedIn, sounds]);
+  const SoundRoller = useCallback(
+    (sound: FreesoundSoundInstance) => (
+      <>
+        {canGetNextSound ? (
+          <Button onClick={getNextSound}>Next</Button>
+        ) : (
+          <Spinner />
+        )}
+        <Sound sound={sound} />
+      </>
+    ),
+    [canGetNextSound, getNextSound],
+  );
 
   if (!isLoggedIn) {
     return (
@@ -45,25 +42,10 @@ const App = () => {
     );
   }
 
-  return (
-    <>
-      {sounds.length} sounds Cursor: {cursor}
-      {cursor < sounds.length - 1 ? (
-        <Button
-          onClick={() => {
-            if (cursor < sounds.length - 1) {
-              setCursor((cursor) => cursor + 1);
-            }
-          }}
-        >
-          Next
-        </Button>
-      ) : (
-        <Spinner />
-      )}
-      {sounds.length > 0 ? <Sound sound={sounds[cursor]} /> : <Spinner />}
-    </>
-  );
+  return sound.caseOf({
+    Nothing: NoSounds,
+    Just: SoundRoller,
+  });
 };
 
 export default App;
