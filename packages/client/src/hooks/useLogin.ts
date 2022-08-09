@@ -1,14 +1,15 @@
 import { createContext, useContext, useEffect, useMemo } from 'react';
+import { Setter } from '../types';
 
-enum LoginState {
+export enum LoginState {
   Unknown = 'unknown', // Upon first load of application, need to confirm login manually.
   LoggedIn = 'loggedin', // Upon asking the server and confirming login or logging in.
   LoggedOut = 'loggedout', // Upon receiving an unauthorized response or timing out.
 }
 
-type LoginContext = {
+export type LoginContext = {
   loginState: LoginState;
-  setLoginState: (value: LoginState) => void;
+  setLoginState: Setter<LoginState>;
 };
 
 const DEFAULT_LOGIN_CONTEXT: LoginContext = {
@@ -18,9 +19,9 @@ const DEFAULT_LOGIN_CONTEXT: LoginContext = {
   },
 };
 
-const LoginContext = createContext<LoginContext>(DEFAULT_LOGIN_CONTEXT);
+export const LoginContext = createContext<LoginContext>(DEFAULT_LOGIN_CONTEXT);
 
-const useLogin = (): boolean => {
+export default function useLogin(): boolean {
   const { loginState, setLoginState } = useContext(LoginContext);
 
   useEffect(() => {
@@ -33,20 +34,10 @@ const useLogin = (): boolean => {
       return isLoggedIn ? LoginState.LoggedIn : LoginState.LoggedOut;
     };
 
-    switch (loginState) {
-      case LoginState.Unknown:
-        fetchLoginState().then(setLoginState);
-        break;
-      case LoginState.LoggedIn:
-        break;
-      case LoginState.LoggedOut:
-        break;
-      default:
-        setLoginState(LoginState.Unknown);
+    if (loginState === LoginState.Unknown) {
+      fetchLoginState().then(setLoginState);
     }
   }, [loginState, setLoginState]);
 
   return useMemo(() => loginState === LoginState.LoggedIn, [loginState]);
-};
-
-export { LoginState, LoginContext, useLogin };
+}

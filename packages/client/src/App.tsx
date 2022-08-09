@@ -2,7 +2,7 @@ import { Button, Spinner } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
 import { useCallback } from 'react';
 import { Sound } from './components/Sound';
-import { useLogin } from './hooks/useLogin';
+import useLogin from './hooks/useLogin';
 import { useSounds } from './hooks/useSounds';
 
 const App = () => {
