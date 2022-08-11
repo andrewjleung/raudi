@@ -5,21 +5,26 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
 import { LoginContext, LoginState } from './hooks/useLogin';
 import './index.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const Main = () => {
   const [loginState, setLoginState] = useState<LoginState>(LoginState.Unknown);
 
   return (
     <React.StrictMode>
-      <LoginContext.Provider value={{ loginState, setLoginState }}>
-        <ChakraProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<App />} />
-            </Routes>
-          </BrowserRouter>
-        </ChakraProvider>
-      </LoginContext.Provider>
+      <QueryClientProvider client={queryClient}>
+        <LoginContext.Provider value={{ loginState, setLoginState }}>
+          <ChakraProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<App />} />
+              </Routes>
+            </BrowserRouter>
+          </ChakraProvider>
+        </LoginContext.Provider>
+      </QueryClientProvider>
     </React.StrictMode>
   );
 };

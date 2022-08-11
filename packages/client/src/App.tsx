@@ -7,7 +7,7 @@ import { useSounds } from './hooks/useSounds';
 
 const App = () => {
   const isLoggedIn = useLogin();
-  const { sound, getNextSound, canGetNextSound } = useSounds(isLoggedIn);
+  const { sound, getNextSound, canGetNextSound } = useSounds();
 
   const NoSounds = () => (
     <>
