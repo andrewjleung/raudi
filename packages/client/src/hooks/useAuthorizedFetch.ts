@@ -15,6 +15,11 @@ export const useAuthorizedFetch = (): AuthorizedFetch => {
       credentials: 'include',
     });
 
+    if (!response.ok) {
+      // TODO: Better error message?
+      throw new Error('Network response was not ok.');
+    }
+
     if (response.status === 401) {
       setLoginState(LoginState.LoggedOut);
     }
