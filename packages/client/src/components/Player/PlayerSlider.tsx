@@ -17,7 +17,7 @@ const PlayerSlider: ComponentWithAs<'div', SliderProps> = (props) => {
       onMouseLeave={() => setShowThumb(false)}
     >
       <SliderTrack>
-        <SliderFilledTrack borderRadius={50} />
+        <SliderFilledTrack bgColor="gray.400" borderRadius={50} />
       </SliderTrack>
       <SliderThumb boxSize={3} visibility={showThumb ? 'visible' : 'hidden'} />
     </Slider>

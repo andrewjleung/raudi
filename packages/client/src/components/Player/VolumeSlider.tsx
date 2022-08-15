@@ -1,5 +1,5 @@
 import { State } from '../../types';
-import PlayerSlider from '../PlayerSlider';
+import PlayerSlider from './PlayerSlider';
 
 const SLIDER_STEP = 0.01;
 
@@ -12,6 +12,7 @@ export default function VolumeSlider({ Volume }: VolumeSliderProps) {
 
   return (
     <PlayerSlider
+      width="10em"
       aria-label="Volume slider"
       defaultValue={volume}
       onChange={(v) => setVolume(v)}

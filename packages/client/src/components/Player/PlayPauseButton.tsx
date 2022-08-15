@@ -27,7 +27,7 @@ export default function PlayPauseButton({ Playing }: PlayPauseButtonProps) {
   return (
     <div
       onClick={() => setPlaying((playing) => !playing)}
-      className="rounded-full w-10 h-10 bg-black ease-in-out duration-75 hover:scale-105 active:scale-110 flex justify-center items-center"
+      className="rounded-full w-10 h-10 bg-emerald-500 ease-in-out duration-75 hover:scale-105 active:scale-110 flex justify-center items-center"
     >
       <PlayPauseIcon playing={playing} />
     </div>

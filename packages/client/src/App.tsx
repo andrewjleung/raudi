@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { Sound } from './components/Sound';
 import useLogin from './hooks/useLogin';
 import { useSounds } from './hooks/useSounds';
+import Player from './components/Player';
 
 const App = () => {
   const { isLoggedIn } = useLogin(true);
@@ -25,6 +26,10 @@ const App = () => {
           <Spinner />
         )}
         <Sound sound={sound} />
+        <Player
+          src={sound.previews['preview-hq-mp3']}
+          onClickNext={getNextSound}
+        />
       </>
     ),
     [canGetNextSound, getNextSound],

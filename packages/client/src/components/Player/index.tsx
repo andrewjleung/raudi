@@ -4,6 +4,7 @@ import PlayPauseButton from './PlayPauseButton';
 import Seeker from './Seeker';
 import VolumeSlider from './VolumeSlider';
 import Time from './Time';
+import NextButton from './NextButton';
 
 const NOOP = () => {
   return;
@@ -12,9 +13,10 @@ const DEFAULT_VOLUME = 50;
 
 type PlayerProps = {
   src: string;
+  onClickNext: () => void;
 };
 
-export default function Player({ src }: PlayerProps) {
+export default function Player({ src, onClickNext }: PlayerProps) {
   const audioRef = useRef<HTMLMediaElement>(null);
 
   const CanPlay = useState(false);
@@ -81,16 +83,21 @@ export default function Player({ src }: PlayerProps) {
 
   return (
     <>
-      <Controls className="" canPlay={canPlay}>
-        <PlayPauseButton Playing={Playing} />
-        <VolumeSlider Volume={Volume} />
-        <Seeker
-          duration={duration}
-          progress={progress}
-          setCurrentTime={setCurrentTime}
-          Playing={Playing}
-        />
-        <Time duration={duration} progress={progress} />
+      <Controls className="m-3 flex flex-col items-center" canPlay={canPlay}>
+        <div className="flex flex-row gap-3">
+          <PlayPauseButton Playing={Playing} />
+          <NextButton onClick={onClickNext} />
+          <VolumeSlider Volume={Volume} />
+        </div>
+        <div className="w-full">
+          <Seeker
+            duration={duration}
+            progress={progress}
+            setCurrentTime={setCurrentTime}
+            Playing={Playing}
+          />
+          <Time duration={duration} progress={progress} />
+        </div>
       </Controls>
       <audio
         ref={audioRef}

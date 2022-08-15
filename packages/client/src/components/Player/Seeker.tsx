@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Setter, State } from '../../types';
-import PlayerSlider from '../PlayerSlider';
+import PlayerSlider from './PlayerSlider';
 
 const SLIDER_STEP = 0.01;
 
@@ -9,6 +9,7 @@ type ScrubberProps = {
   progress: number;
   setCurrentTime: Setter<number>;
   Playing: State<boolean>;
+  className?: string;
 };
 
 export default function Seeker({
@@ -16,6 +17,7 @@ export default function Seeker({
   progress,
   setCurrentTime,
   Playing,
+  className,
 }: ScrubberProps) {
   const [playing, setPlaying] = Playing;
   const [wasPlaying, setWasPlaying] = useState(false);
@@ -35,6 +37,7 @@ export default function Seeker({
 
   return (
     <PlayerSlider
+      className={`${className || ''}`}
       aria-label="Seeker"
       defaultValue={0}
       step={SLIDER_STEP}
