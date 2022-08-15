@@ -5,12 +5,17 @@ import { Spinner } from '@chakra-ui/spinner';
 type ControlsProps = {
   canPlay: boolean;
   children: React.ReactNode;
+  className: string;
 };
 
-export default function Controls({ canPlay, children }: ControlsProps) {
+export default function Controls({
+  canPlay,
+  children,
+  className,
+}: ControlsProps) {
   if (!canPlay) {
     return <Spinner />;
   }
 
-  return <>{children}</>;
+  return <div className={`${className} m-3`}>{children}</div>;
 }

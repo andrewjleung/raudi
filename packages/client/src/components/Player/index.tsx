@@ -3,6 +3,7 @@ import Controls from './Controls';
 import PlayPauseButton from './PlayPauseButton';
 import Seeker from './Seeker';
 import VolumeSlider from './VolumeSlider';
+import Time from './Time';
 
 const NOOP = () => {
   return;
@@ -19,22 +20,22 @@ export default function Player({ src }: PlayerProps) {
   const CanPlay = useState(false);
   const Playing = useState(false);
   const Volume = useState(DEFAULT_VOLUME);
-  const Time = useState(0);
+  const CurrentTime = useState(0);
   const Duration = useState<number>(0);
   const Progress = useState(0);
 
   const [canPlay, setCanPlay] = CanPlay;
   const [playing, setPlaying] = Playing;
   const [volume] = Volume;
-  const [time, setTime] = Time;
+  const [currentTime, setCurrentTime] = CurrentTime;
   const [duration, setDuration] = Duration;
   const [progress, setProgress] = Progress;
 
   useEffect(() => {
     setPlaying(false);
-    setTime(0);
+    setCurrentTime(0);
     setProgress(0);
-  }, [src, setPlaying, setTime, setProgress]);
+  }, [src, setPlaying, setCurrentTime, setProgress]);
 
   useEffect(() => {
     if (audioRef.current === null) {
@@ -62,8 +63,8 @@ export default function Player({ src }: PlayerProps) {
       return;
     }
 
-    audioRef.current.currentTime = time;
-  }, [time]);
+    audioRef.current.currentTime = currentTime;
+  }, [currentTime]);
 
   const onTimeUpdate = () => {
     if (audioRef.current === null) {
@@ -80,15 +81,16 @@ export default function Player({ src }: PlayerProps) {
 
   return (
     <>
-      <Controls canPlay={canPlay}>
+      <Controls className="" canPlay={canPlay}>
         <PlayPauseButton Playing={Playing} />
         <VolumeSlider Volume={Volume} />
         <Seeker
           duration={duration}
           progress={progress}
-          setTime={setTime}
+          setCurrentTime={setCurrentTime}
           Playing={Playing}
         />
+        <Time duration={duration} progress={progress} />
       </Controls>
       <audio
         ref={audioRef}
