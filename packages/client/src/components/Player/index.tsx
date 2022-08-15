@@ -22,7 +22,6 @@ export default function Player({ src }: PlayerProps) {
   const Time = useState(0);
   const Duration = useState<number>(0);
   const Progress = useState(0);
-  const Seeking = useState(false);
 
   const [canPlay, setCanPlay] = CanPlay;
   const [playing, setPlaying] = Playing;
@@ -88,7 +87,6 @@ export default function Player({ src }: PlayerProps) {
           duration={duration}
           progress={progress}
           setTime={setTime}
-          Seeking={Seeking}
           Playing={Playing}
         />
       </Controls>

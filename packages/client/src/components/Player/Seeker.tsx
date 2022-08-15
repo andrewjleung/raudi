@@ -1,12 +1,6 @@
-import {
-  Tooltip,
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
-} from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
 import { Setter, State } from '../../types';
+import PlayerSlider from '../PlayerSlider';
 
 const SLIDER_STEP = 0.01;
 
@@ -42,7 +36,6 @@ type ScrubberProps = {
   duration: number;
   progress: number;
   setTime: Setter<number>;
-  Seeking: State<boolean>;
   Playing: State<boolean>;
 };
 
@@ -50,14 +43,9 @@ export default function Seeker({
   duration,
   progress,
   setTime,
-  Seeking,
   Playing,
 }: ScrubberProps) {
-  const [seeking, setSeeking] = Seeking;
   const [playing, setPlaying] = Playing;
-
-  const [showTimeTooltip, setShowTimeTooltip] = useState(false);
-  const [hovering, setHovering] = useState(false);
   const [wasPlaying, setWasPlaying] = useState(false);
 
   const formattedTime = useMemo(
@@ -69,59 +57,26 @@ export default function Seeker({
     setTime((value / 100) * duration);
   };
 
-  const onMouseEnter = () => {
-    setHovering(true);
-    setShowTimeTooltip(true);
-  };
-
-  const onMouseLeave = () => {
-    setHovering(false);
-    if (!seeking) {
-      setShowTimeTooltip(false);
-    }
-  };
-
   const onChangeStart = () => {
-    setSeeking(true);
     setWasPlaying(playing);
     setPlaying(false);
-    setShowTimeTooltip(true);
   };
 
   const onChangeEnd = () => {
-    setSeeking(false);
     setPlaying(wasPlaying);
-    if (!hovering) {
-      setShowTimeTooltip(false);
-    }
   };
 
   return (
     <>
-      <Slider
+      <PlayerSlider
         aria-label="Seeker"
         defaultValue={0}
         step={SLIDER_STEP}
         value={progress}
         onChange={onChange}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
         onChangeStart={onChangeStart}
         onChangeEnd={onChangeEnd}
-      >
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <Tooltip
-          bg="teal.500"
-          color="white"
-          placement="top"
-          isOpen={showTimeTooltip}
-          label={`${formattedTime}`}
-        >
-          <SliderThumb />
-        </Tooltip>
-      </Slider>
+      />
       {formattedTime} / {getFormattedTime(duration)}
     </>
   );
