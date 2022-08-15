@@ -1,29 +1,34 @@
-import { useContext } from 'react';
-import { LoginContext, LoginState } from './useLogin';
+import { Either, Left, Right } from 'purify-ts';
+import useLogin, { LoginState } from './useLogin';
 
 export type AuthorizedFetch = (
   input: RequestInfo | URL,
   init?: RequestInit,
-) => Promise<Response>;
+) => Promise<Either<unknown, unknown>>;
 
 export const useAuthorizedFetch = (): AuthorizedFetch => {
-  const { setLoginState } = useContext(LoginContext);
+  const { transitionLoginState } = useLogin();
 
   return async (input: RequestInfo | URL, init?: RequestInit) => {
-    const response = await fetch(input, {
-      ...init,
-      credentials: 'include',
-    });
+    try {
+      const response = await fetch(input, {
+        ...init,
+        credentials: 'include',
+      });
 
-    if (!response.ok) {
-      // TODO: Better error message?
-      throw new Error('Network response was not ok.');
+      if (response.status === 401) {
+        transitionLoginState(LoginState.LoggedOut);
+      }
+
+      if (!response.ok) {
+        // TODO: Better error message?
+        return Left(Error('Network response was not ok.'));
+      }
+
+      const parsedResponse = await response.json();
+      return Right(parsedResponse);
+    } catch (e) {
+      return Left(e);
     }
-
-    if (response.status === 401) {
-      setLoginState(LoginState.LoggedOut);
-    }
-
-    return response;
   };
 };
