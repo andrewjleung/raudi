@@ -14,9 +14,14 @@ const DEFAULT_VOLUME = 50;
 type PlayerProps = {
   src: string;
   onClickNext: () => void;
+  canGetNextSound: boolean;
 };
 
-export default function Player({ src, onClickNext }: PlayerProps) {
+export default function Player({
+  src,
+  onClickNext,
+  canGetNextSound,
+}: PlayerProps) {
   const audioRef = useRef<HTMLMediaElement>(null);
 
   const CanPlay = useState(false);
@@ -86,7 +91,7 @@ export default function Player({ src, onClickNext }: PlayerProps) {
       <Controls className="m-3 flex flex-col items-center" canPlay={canPlay}>
         <div className="flex flex-row gap-3">
           <PlayPauseButton Playing={Playing} />
-          <NextButton onClick={onClickNext} />
+          <NextButton onClick={onClickNext} disabled={!canGetNextSound} />
           <VolumeSlider Volume={Volume} />
         </div>
         <div className="w-full">

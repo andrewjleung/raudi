@@ -20,15 +20,11 @@ const App = () => {
   const SoundRoller = useCallback(
     (sound: FreesoundSoundInstance) => (
       <>
-        {canGetNextSound ? (
-          <Button onClick={getNextSound}>Next</Button>
-        ) : (
-          <Spinner />
-        )}
         <Sound sound={sound} />
         <Player
           src={sound.previews['preview-hq-mp3']}
           onClickNext={getNextSound}
+          canGetNextSound={canGetNextSound}
         />
       </>
     ),
