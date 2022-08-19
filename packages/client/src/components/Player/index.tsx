@@ -88,7 +88,10 @@ export default function Player({
 
   return (
     <>
-      <Controls className="m-3 flex flex-col items-center" canPlay={canPlay}>
+      <Controls
+        className="m-3 flex flex-col items-center min-w-fit"
+        canPlay={canPlay}
+      >
         <div className="flex flex-row gap-3">
           <PlayPauseButton Playing={Playing} />
           <NextButton onClick={onClickNext} disabled={!canGetNextSound} />

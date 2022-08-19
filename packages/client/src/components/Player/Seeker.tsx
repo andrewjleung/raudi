@@ -37,7 +37,7 @@ export default function Seeker({
 
   return (
     <PlayerSlider
-      className={`${className || ''}`}
+      className={className}
       aria-label="Seeker"
       defaultValue={0}
       step={SLIDER_STEP}

@@ -1,6 +1,7 @@
 import { State } from '../../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames';
 
 type PlayPauseButtonProps = {
   Playing: State<boolean>;
@@ -24,10 +25,20 @@ const PlayPauseIcon = ({ playing }: { playing: boolean }) => {
 export default function PlayPauseButton({ Playing }: PlayPauseButtonProps) {
   const [playing, setPlaying] = Playing;
 
+  const btnClassNames = classNames(
+    'rounded-full',
+    'flex justify-center items-center',
+    'w-10 h-10',
+    'cursor-pointer',
+    'bg-emerald-500',
+    'ease-in-out duration-75',
+    'hover:scale-105 active:scale-110',
+  );
+
   return (
     <div
       onClick={() => setPlaying((playing) => !playing)}
-      className="rounded-full w-10 h-10 bg-emerald-500 ease-in-out duration-75 hover:scale-105 active:scale-110 flex justify-center items-center"
+      className={btnClassNames}
     >
       <PlayPauseIcon playing={playing} />
     </div>

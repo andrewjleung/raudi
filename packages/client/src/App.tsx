@@ -1,23 +1,24 @@
-import { Button, Spinner } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
 import { useCallback } from 'react';
 import { Sound } from './components/Sound';
 import useLogin from './hooks/useLogin';
 import { useSounds } from './hooks/useSounds';
 import Player from './components/Player';
+import ProgressHeader from './components/ProgressHeader';
 
 const App = () => {
   const { isLoggedIn } = useLogin(true);
-  const { sound, getNextSound, canGetNextSound } = useSounds();
+  const { sound, getNextSound, canGetNextSound, isFetching } = useSounds();
 
   const NoSounds = () => (
     <>
+      <ProgressHeader />
       Loading sounds...
-      <Spinner />
     </>
   );
 
-  const SoundRoller = useCallback(
+  const SoundPlayer = useCallback(
     (sound: FreesoundSoundInstance) => (
       <>
         <Sound sound={sound} />
@@ -45,7 +46,7 @@ const App = () => {
 
   return sound.caseOf({
     Nothing: NoSounds,
-    Just: SoundRoller,
+    Just: SoundPlayer,
   });
 };
 

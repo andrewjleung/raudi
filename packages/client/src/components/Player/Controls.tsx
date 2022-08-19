@@ -17,5 +17,5 @@ export default function Controls({
     return <Spinner />;
   }
 
-  return <div className={`${className}`}>{children}</div>;
+  return <div className={className}>{children}</div>;
 }

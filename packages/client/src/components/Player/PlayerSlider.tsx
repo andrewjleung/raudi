@@ -8,13 +8,18 @@ import { ComponentWithAs, SliderProps } from '@chakra-ui/react';
 import { useState } from 'react';
 
 const PlayerSlider: ComponentWithAs<'div', SliderProps> = (props) => {
-  const [showThumb, setShowThumb] = useState(false);
+  const [mouseEntered, setMouseEntered] = useState(false);
+  const [changing, setChanging] = useState(false);
+
+  const showThumb = mouseEntered || changing;
 
   return (
     <Slider
       {...props}
-      onMouseEnter={() => setShowThumb(true)}
-      onMouseLeave={() => setShowThumb(false)}
+      onMouseEnter={() => setMouseEntered(true)}
+      onMouseLeave={() => setMouseEntered(false)}
+      onChangeStart={() => setChanging(true)}
+      onChangeEnd={() => setChanging(false)}
     >
       <SliderTrack>
         <SliderFilledTrack bgColor="gray.400" borderRadius={50} />
