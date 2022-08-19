@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeXmark, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import {
+  faVolumeXmark,
+  faVolumeOff,
+  faVolumeHigh,
+} from '@fortawesome/free-solid-svg-icons';
 import { State } from '../../types';
 import PlayerSlider from './PlayerSlider';
 import classNames from 'classnames';
@@ -35,17 +39,22 @@ export const VolumeButton = ({ Volume, Muted }: VolumeProps) => {
   const [volume] = Volume;
   const [muted, setMuted] = Muted;
 
-  const volumeIcon = volume === 0 || muted ? faVolumeXmark : faVolumeHigh;
+  const volumeIcon = muted
+    ? faVolumeXmark
+    : volume === 0
+    ? faVolumeOff
+    : faVolumeHigh;
 
   const iconClassNames = classNames(
-    'w-5 h-5',
+    // TODO: Hacky solution to consistent icon sizes, also a bit jittery when the size switches.
+    { 'w-4 h-4': volume === 0 && !muted, 'w-5 h-5': volume > 0 || muted },
     'ease-in-out duration-75',
     'text-gray-200 hover:text-gray-300',
   );
 
   return (
     <button
-      className="flex items-center"
+      className="w-5 h-5 flex items-center"
       onClick={() => setMuted((muted) => !muted)}
     >
       <FontAwesomeIcon className={iconClassNames} icon={volumeIcon} />
