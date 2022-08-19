@@ -46,6 +46,7 @@ export default function Player({
     setProgress(0);
   }, [src, setPlaying, setCurrentTime, setProgress]);
 
+  // TODO: Really need to clean up this pattern...
   useEffect(() => {
     if (audioRef.current === null) {
       return;

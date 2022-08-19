@@ -41,11 +41,13 @@ export const VolumeButton = ({ Volume, Muted }: VolumeProps) => {
     'w-5 h-5',
     'ease-in-out duration-75',
     'text-gray-200 hover:text-gray-300',
-    'active:scale-105',
   );
 
   return (
-    <button onClick={() => setMuted((muted) => !muted)}>
+    <button
+      className="flex items-center"
+      onClick={() => setMuted((muted) => !muted)}
+    >
       <FontAwesomeIcon className={iconClassNames} icon={volumeIcon} />
     </button>
   );
