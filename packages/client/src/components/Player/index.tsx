@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Controls from './Controls';
 import PlayPauseButton from './PlayPauseButton';
 import Seeker from './Seeker';
-import VolumeSlider from './VolumeSlider';
+import { VolumeSetter, VolumeButton, VolumeSlider } from './VolumeSetter';
 import Time from './Time';
 import NextButton from './NextButton';
 
@@ -27,6 +27,7 @@ export default function Player({
   const CanPlay = useState(false);
   const Playing = useState(false);
   const Volume = useState(DEFAULT_VOLUME);
+  const Muted = useState(false);
   const CurrentTime = useState(0);
   const Duration = useState<number>(0);
   const Progress = useState(0);
@@ -34,6 +35,7 @@ export default function Player({
   const [canPlay, setCanPlay] = CanPlay;
   const [playing, setPlaying] = Playing;
   const [volume] = Volume;
+  const [muted] = Muted;
   const [currentTime, setCurrentTime] = CurrentTime;
   const [duration, setDuration] = Duration;
   const [progress, setProgress] = Progress;
@@ -73,6 +75,14 @@ export default function Player({
     audioRef.current.currentTime = currentTime;
   }, [currentTime]);
 
+  useEffect(() => {
+    if (audioRef.current === null) {
+      return;
+    }
+
+    audioRef.current.muted = muted;
+  }, [muted]);
+
   const onTimeUpdate = () => {
     if (audioRef.current === null) {
       return;
@@ -93,9 +103,12 @@ export default function Player({
         canPlay={canPlay}
       >
         <div className="flex flex-row gap-3">
+          <VolumeSetter>
+            <VolumeButton Volume={Volume} Muted={Muted} />
+            <VolumeSlider Volume={Volume} Muted={Muted} />
+          </VolumeSetter>
           <PlayPauseButton Playing={Playing} />
           <NextButton onClick={onClickNext} disabled={!canGetNextSound} />
-          <VolumeSlider Volume={Volume} />
         </div>
         <div className="w-full">
           <Seeker

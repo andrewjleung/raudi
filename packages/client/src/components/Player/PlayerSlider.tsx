@@ -4,10 +4,12 @@ import {
   SliderFilledTrack,
   SliderThumb,
 } from '@chakra-ui/react';
-import { ComponentWithAs, SliderProps } from '@chakra-ui/react';
+import { SliderProps } from '@chakra-ui/react';
 import { useState } from 'react';
 
-const PlayerSlider: ComponentWithAs<'div', SliderProps> = (props) => {
+type PlayerSliderProps = SliderProps & { ignored?: boolean };
+
+const PlayerSlider = ({ ignored, ...props }: PlayerSliderProps) => {
   const [mouseEntered, setMouseEntered] = useState(false);
   const [changing, setChanging] = useState(false);
 
@@ -22,7 +24,10 @@ const PlayerSlider: ComponentWithAs<'div', SliderProps> = (props) => {
       onChangeEnd={() => setChanging(false)}
     >
       <SliderTrack>
-        <SliderFilledTrack bgColor="gray.400" borderRadius={50} />
+        <SliderFilledTrack
+          bgColor={ignored ? 'gray.200' : 'gray.400'}
+          borderRadius={50}
+        />
       </SliderTrack>
       <SliderThumb boxSize={3} visibility={showThumb ? 'visible' : 'hidden'} />
     </Slider>
