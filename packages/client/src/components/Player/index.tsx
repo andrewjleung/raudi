@@ -5,6 +5,7 @@ import Seeker from './Seeker';
 import { VolumeSetter, VolumeButton, VolumeSlider } from './VolumeSetter';
 import Time from './Time';
 import NextButton from './NextButton';
+import { Spacer } from '@chakra-ui/react';
 
 const NOOP = () => {
   return;
@@ -104,13 +105,14 @@ export default function Player({
         className="m-3 flex flex-col items-center min-w-fit"
         canPlay={canPlay}
       >
-        <div className="flex flex-row gap-3">
+        <div className="flex flex-row w-full gap-3">
+          <PlayPauseButton Playing={Playing} />
+          <NextButton onClick={onClickNext} disabled={!canGetNextSound} />
+          <Spacer className="grow" />
           <VolumeSetter>
             <VolumeButton Volume={Volume} Muted={Muted} />
             <VolumeSlider Volume={Volume} Muted={Muted} />
           </VolumeSetter>
-          <PlayPauseButton Playing={Playing} />
-          <NextButton onClick={onClickNext} disabled={!canGetNextSound} />
         </div>
         <div className="w-full">
           <Seeker
