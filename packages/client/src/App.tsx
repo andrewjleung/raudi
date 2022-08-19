@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react';
+import { Box, Button, Container } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
 import { useCallback } from 'react';
 import { Sound } from './components/Sound';
@@ -20,14 +20,14 @@ const App = () => {
 
   const SoundPlayer = useCallback(
     (sound: FreesoundSoundInstance) => (
-      <>
+      <div className="flex flex-col gap-4">
         <Sound sound={sound} />
         <Player
           src={sound.previews['preview-hq-mp3']}
           onClickNext={getNextSound}
           canGetNextSound={canGetNextSound}
         />
-      </>
+      </div>
     ),
     [canGetNextSound, getNextSound],
   );
@@ -44,10 +44,14 @@ const App = () => {
     );
   }
 
-  return sound.caseOf({
-    Nothing: NoSounds,
-    Just: SoundPlayer,
-  });
+  return (
+    <Container>
+      {sound.caseOf({
+        Nothing: NoSounds,
+        Just: SoundPlayer,
+      })}
+    </Container>
+  );
 };
 
 export default App;

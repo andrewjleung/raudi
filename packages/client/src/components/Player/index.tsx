@@ -5,7 +5,7 @@ import Seeker from './Seeker';
 import { VolumeSetter, VolumeButton, VolumeSlider } from './VolumeSetter';
 import Time from './Time';
 import NextButton from './NextButton';
-import { Spacer } from '@chakra-ui/react';
+import { Skeleton, Spacer } from '@chakra-ui/react';
 
 const NOOP = () => {
   return;
@@ -40,6 +40,8 @@ export default function Player({
   const [currentTime, setCurrentTime] = CurrentTime;
   const [duration, setDuration] = Duration;
   const [progress, setProgress] = Progress;
+
+  const [switching, setSwitching] = useState(false);
 
   useEffect(() => {
     setPlaying(false);
@@ -102,7 +104,7 @@ export default function Player({
   return (
     <>
       <Controls
-        className="m-3 flex flex-col items-center min-w-fit"
+        className="flex flex-col items-center gap-2 min-w-fit"
         canPlay={canPlay}
       >
         <div className="flex flex-row w-full gap-3">
@@ -121,7 +123,11 @@ export default function Player({
             setCurrentTime={setCurrentTime}
             Playing={Playing}
           />
-          <Time duration={duration} progress={progress} />
+          {switching ? (
+            <Skeleton marginTop="1" width="5em" height="1em" />
+          ) : (
+            <Time duration={duration} progress={progress} />
+          )}
         </div>
       </Controls>
       <audio
@@ -130,7 +136,7 @@ export default function Player({
         onAbort={NOOP}
         onCanPlay={() => setCanPlay(true)}
         onCanPlayThrough={NOOP}
-        onDurationChange={NOOP}
+        onDurationChange={() => setSwitching(false)}
         onEmptied={NOOP}
         onEnded={() => setPlaying(false)}
         onError={NOOP}
@@ -140,7 +146,7 @@ export default function Player({
             setDuration(audioRef.current.duration);
           }
         }}
-        onLoadStart={NOOP}
+        onLoadStart={() => setSwitching(true)}
         onPause={NOOP}
         onPlay={NOOP}
         onPlaying={NOOP}
