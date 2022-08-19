@@ -35,7 +35,7 @@ export default function Player({
   const [canPlay, setCanPlay] = CanPlay;
   const [playing, setPlaying] = Playing;
   const [volume] = Volume;
-  const [muted] = Muted;
+  const [muted, setMuted] = Muted;
   const [currentTime, setCurrentTime] = CurrentTime;
   const [duration, setDuration] = Duration;
   const [progress, setProgress] = Progress;
@@ -51,8 +51,9 @@ export default function Player({
       return;
     }
 
+    setMuted(false);
     audioRef.current.volume = volume / 100;
-  }, [volume]);
+  }, [setMuted, volume]);
 
   useEffect(() => {
     if (audioRef.current === null) {
