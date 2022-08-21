@@ -1,4 +1,4 @@
-import { Box, Button, Container } from '@chakra-ui/react';
+import { Button, Container } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
 import { useCallback } from 'react';
 import { Sound } from './components/Sound';
@@ -6,6 +6,9 @@ import useLogin from './hooks/useLogin';
 import { useSounds } from './hooks/useSounds';
 import Player from './components/Player';
 import ProgressHeader from './components/ProgressHeader';
+import SoundDataAccordion from './components/Sound/SoundDataAccordion';
+import SoundData from './components/Sound/SoundData';
+import SoundTags from './components/Sound/SoundTags';
 
 const App = () => {
   const { isLoggedIn } = useLogin(true);
@@ -27,6 +30,10 @@ const App = () => {
           onClickNext={getNextSound}
           canGetNextSound={canGetNextSound}
         />
+        <SoundDataAccordion>
+          <SoundTags sound={sound} />
+          <SoundData sound={sound} />
+        </SoundDataAccordion>
       </div>
     ),
     [canGetNextSound, getNextSound],
