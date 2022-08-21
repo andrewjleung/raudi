@@ -107,7 +107,7 @@ export default function Player({
         className="flex flex-col items-center gap-2 min-w-fit"
         canPlay={canPlay}
       >
-        <div className="flex flex-row w-full gap-3">
+        <div className="pl-3 pr-3 flex flex-row w-full gap-3">
           <PlayPauseButton Playing={Playing} />
           <NextButton onClick={onClickNext} disabled={!canGetNextSound} />
           <Spacer className="grow" />

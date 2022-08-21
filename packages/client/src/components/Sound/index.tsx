@@ -1,23 +1,28 @@
-import { Image, Skeleton } from '@chakra-ui/react';
+import { Heading, Image, Skeleton } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
 
 const SOUND_IMAGE_H = 128;
 const SOUND_IMAGE_W = 573;
 
-type SoundProps = {
-  sound: FreesoundSoundInstance;
-};
-
 const ImageFallback = () => (
   <Skeleton height={SOUND_IMAGE_H} width={SOUND_IMAGE_W} />
 );
 
-// TODO: Use better fallbacks.
+type SoundProps = {
+  sound: FreesoundSoundInstance;
+};
+
 const Sound = ({ sound }: SoundProps) => {
   return (
     <div>
-      {sound.name}
-      <Image src={sound.images.waveform_l} fallback={<ImageFallback />} />
+      <Heading>{sound.name}</Heading>
+      <Heading size="xs">{sound.username}</Heading>
+      <Image
+        height={SOUND_IMAGE_H}
+        width={SOUND_IMAGE_W}
+        src={sound.images.waveform_l}
+        fallback={<ImageFallback />}
+      />
       <Image
         height={SOUND_IMAGE_H}
         width={SOUND_IMAGE_W}
