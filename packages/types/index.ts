@@ -7,16 +7,18 @@ const AccessTokenResponseProperties = {
   refresh_token: string,
 };
 
-const AccessTokenResponse = Codec.interface(AccessTokenResponseProperties);
+export const AccessTokenResponseCodec = Codec.interface(
+  AccessTokenResponseProperties
+);
 
-type AccessTokenResponse = GetType<typeof AccessTokenResponse>;
+export type AccessTokenResponse = GetType<typeof AccessTokenResponseCodec>;
 
-const AccessTokenJwtPayload = Codec.interface({
+export const AccessTokenJwtPayloadCodec = Codec.interface({
   ...AccessTokenResponseProperties,
   freesound_user_id: number,
 });
 
-type AccessTokenJwtPayload = GetType<typeof AccessTokenJwtPayload>;
+export type AccessTokenJwtPayload = GetType<typeof AccessTokenJwtPayloadCodec>;
 
 const SoundInstancePreviews = Codec.interface({
   "preview-hq-mp3": string,
@@ -37,7 +39,7 @@ const SoundInstanceImages = Codec.interface({
 });
 
 // https://freesound.org/docs/api/resources_apiv2.html#sound-instance
-const FreesoundSoundInstance = Codec.interface({
+export const FreesoundSoundInstanceCodec = Codec.interface({
   id: number,
   url: string,
   name: string,
@@ -73,22 +75,24 @@ const FreesoundSoundInstance = Codec.interface({
   // ac_analysis: record(string, unknown),
 });
 
-type FreesoundSoundInstance = GetType<typeof FreesoundSoundInstance>;
+export type FreesoundSoundInstance = GetType<
+  typeof FreesoundSoundInstanceCodec
+>;
 
-const FreesoundUserInstanceAvatar = Codec.interface({
+const FreesoundUserInstanceAvatarCodec = Codec.interface({
   small: string,
   large: string,
   medium: string,
 });
 
-const FreesoundMeUserInstance = Codec.interface({
+export const FreesoundMeUserInstanceCodec = Codec.interface({
   email: string,
   unique_id: number,
   url: string,
   username: string,
   about: string,
   home_page: string,
-  avatar: FreesoundUserInstanceAvatar,
+  avatar: FreesoundUserInstanceAvatarCodec,
   date_joined: string,
   num_sounds: number,
   sounds: string,
@@ -99,11 +103,6 @@ const FreesoundMeUserInstance = Codec.interface({
   bookmark_categories: string,
 });
 
-type FreesoundMeUserInstance = GetType<typeof FreesoundMeUserInstance>;
-
-export {
-  AccessTokenResponse,
-  AccessTokenJwtPayload,
-  FreesoundSoundInstance,
-  FreesoundMeUserInstance,
-};
+export type FreesoundMeUserInstance = GetType<
+  typeof FreesoundMeUserInstanceCodec
+>;

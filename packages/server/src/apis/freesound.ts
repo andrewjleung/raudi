@@ -4,6 +4,9 @@ import {
   AccessTokenResponse,
   FreesoundSoundInstance,
   FreesoundMeUserInstance,
+  AccessTokenResponseCodec,
+  FreesoundSoundInstanceCodec,
+  FreesoundMeUserInstanceCodec,
 } from '@raudi/types';
 import { config } from '../config.js';
 
@@ -30,7 +33,7 @@ const getAccessToken = async (
       .post(`${FREESOUND_API_URL}/oauth2/access_token`, options)
       .json();
 
-    return AccessTokenResponse.decode(response);
+    return AccessTokenResponseCodec.decode(response);
   } catch (e) {
     return Left(e);
   }
@@ -55,7 +58,7 @@ const getSound =
   async (id: string): Promise<Either<unknown, FreesoundSoundInstance>> => {
     // Filter fields by those specified in the SoundInstance type.
     const fields = Object.keys(
-      FreesoundSoundInstance.schema().properties || {},
+      FreesoundSoundInstanceCodec.schema().properties || {},
     );
 
     const options = {
@@ -73,7 +76,7 @@ const getSound =
         .get(`${FREESOUND_API_URL}/sounds/${id}`, options)
         .json();
 
-      return FreesoundSoundInstance.decode(response);
+      return FreesoundSoundInstanceCodec.decode(response);
     } catch (e) {
       return Left(e);
     }
@@ -91,7 +94,7 @@ const getMe =
     try {
       const response = await got.get(`${FREESOUND_API_URL}/me`, options).json();
 
-      return FreesoundMeUserInstance.decode(response);
+      return FreesoundMeUserInstanceCodec.decode(response);
     } catch (e) {
       return Left(e);
     }

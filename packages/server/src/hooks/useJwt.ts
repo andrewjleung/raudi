@@ -11,7 +11,7 @@ import { Maybe } from 'purify-ts';
 import { decrypt } from '../encryption.js';
 import { encaseNullable } from '../utils/purify-utils.js';
 import { JWT_COOKIE_NAME } from '../routes/auth.js';
-import { AccessTokenJwtPayload } from '@raudi/types';
+import { AccessTokenJwtPayloadCodec } from '@raudi/types';
 
 const useJwt =
   (
@@ -27,7 +27,7 @@ const useJwt =
     Maybe.fromNullable(request.cookies[JWT_COOKIE_NAME])
       .chain(encaseNullable((cookie) => reply.unsignCookie(cookie).value))
       .chain(encaseNullable((cookie) => fastify.jwt.decode<object>(cookie)))
-      .chain((jwt) => AccessTokenJwtPayload.decode(jwt).toMaybe())
+      .chain((jwt) => AccessTokenJwtPayloadCodec.decode(jwt).toMaybe())
       .chain((jwt) =>
         Maybe.encase(() => ({
           ...jwt,
