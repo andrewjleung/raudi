@@ -5,8 +5,10 @@ import { fetchSounds } from '../api/soundsApi';
 import { useAuthorizedFetch } from './useAuthorizedFetch';
 import { useInfiniteQuery, InfiniteData } from '@tanstack/react-query';
 import useLogin from './useLogin';
+import useInterval from './useInterval';
 
-const STAYAHEAD_PAGE_COUNT = 3;
+const STAYAHEAD_PAGE_COUNT = 4;
+const POLL_TIME = 2000;
 
 export type UseSounds = {
   sound: Maybe<FreesoundSoundInstance>;
@@ -73,9 +75,7 @@ export const useSounds = (): UseSounds => {
       },
     );
 
-  const getNextSound = () => {
-    getNextSoundLocation(data, soundLocation).ifJust(setSoundLocation);
-
+  useInterval(() => {
     const isAhead = () =>
       data !== undefined &&
       data.pages.length - soundLocation.page >= STAYAHEAD_PAGE_COUNT;
@@ -83,7 +83,10 @@ export const useSounds = (): UseSounds => {
     if (!isFetchingNextPage && !isAhead()) {
       fetchNextPage();
     }
-  };
+  }, POLL_TIME);
+
+  const getNextSound = () =>
+    getNextSoundLocation(data, soundLocation).ifJust(setSoundLocation);
 
   // Reset the sound location when the user gets logged out.
   useEffect(() => {
@@ -97,7 +100,7 @@ export const useSounds = (): UseSounds => {
       isLoggedIn && data
         ? // TODO: ensure this access is safe.
           Just(data.pages[soundLocation.page][soundLocation.soundIndex])
-      : Nothing,
+        : Nothing,
     getNextSound,
     canGetNextSound: getNextSoundLocation(data, soundLocation).isJust(),
     isFetching,
