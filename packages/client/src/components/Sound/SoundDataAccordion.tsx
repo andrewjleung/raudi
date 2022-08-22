@@ -1,11 +1,7 @@
-import {
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-} from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { Collapse, useDisclosure } from '@chakra-ui/react';
+import classNames from 'classnames';
 
 type SoundDataAccordionProps = {
   children: React.ReactNode;
@@ -14,18 +10,24 @@ type SoundDataAccordionProps = {
 export default function SoundDataAccordion({
   children,
 }: SoundDataAccordionProps) {
+  const { isOpen, onToggle } = useDisclosure();
+
+  const btnClassNames = classNames(
+    'flex justify-center',
+    'cursor-pointer',
+    'text-gray-300',
+    'ease-in-out duration-300',
+    'hover:bg-gray-100',
+  );
+
   return (
-    <>
-      <Accordion allowToggle>
-        <AccordionItem borderTopWidth={0}>
-          <AccordionButton pl={0} flex="1" justifyContent="center">
-            <FontAwesomeIcon icon={faEllipsis} className="text-gray-300" />
-          </AccordionButton>
-          <AccordionPanel pr={0} pl={0} pb={3}>
-            {children}
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
-    </>
+    <div>
+      <div className={btnClassNames} onClick={onToggle}>
+        <FontAwesomeIcon icon={faEllipsis} />
+      </div>
+      <Collapse in={isOpen} animateOpacity>
+        {children}
+      </Collapse>
+    </div>
   );
 }

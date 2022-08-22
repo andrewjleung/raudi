@@ -5,7 +5,7 @@ import Seeker from './Seeker';
 import { VolumeSetter, VolumeButton, VolumeSlider } from './VolumeSetter';
 import Time from './Time';
 import NextButton from './NextButton';
-import { Skeleton, Spacer } from '@chakra-ui/react';
+import { Box, Skeleton, Spacer } from '@chakra-ui/react';
 
 const NOOP = () => {
   return;
@@ -124,12 +124,15 @@ export default function Player({
             Playing={Playing}
           />
           {switching ? (
-            <Skeleton marginTop="1" width="5em" height="1em" />
+            <Box height="1.25em">
+              <Skeleton marginTop="1" width="5.5em" height="1em" />
+            </Box>
           ) : (
             <Time duration={duration} progress={progress} />
           )}
         </div>
       </Controls>
+
       <audio
         ref={audioRef}
         src={src}
