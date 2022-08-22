@@ -9,6 +9,7 @@ import ProgressHeader from './components/ProgressHeader';
 import SoundDataAccordion from './components/Sound/SoundDataAccordion';
 import SoundData from './components/Sound/SoundData';
 import SoundTags from './components/Sound/SoundTags';
+import SoundDescription from './components/Sound/SoundDescription';
 
 const App = () => {
   const { isLoggedIn } = useLogin(true);
@@ -31,6 +32,7 @@ const App = () => {
           canGetNextSound={canGetNextSound}
         />
         <SoundDataAccordion>
+            <SoundDescription sound={sound} />
           <SoundTags sound={sound} />
           <SoundData sound={sound} />
         </SoundDataAccordion>
