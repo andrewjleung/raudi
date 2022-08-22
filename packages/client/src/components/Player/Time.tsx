@@ -1,3 +1,5 @@
+import classNames from 'classnames';
+
 type HoursMinutesSeconds = {
   hours: number;
   minutes: number;
@@ -6,6 +8,7 @@ type HoursMinutesSeconds = {
 
 type TimeStampProps = {
   seconds: number;
+  className?: string;
 };
 
 type TimeProps = {
@@ -24,31 +27,28 @@ const getHMS = (seconds: number): HoursMinutesSeconds => {
   };
 };
 
-const TimeStamp = ({ seconds }: TimeStampProps) => {
+const TimeStamp = ({ seconds, className = '' }: TimeStampProps) => {
   const hms = getHMS(seconds);
   const pad = (timePart: number) => String(timePart).padStart(2, '0');
+  const timeString =
+    hms.hours < 1
+      ? `${hms.minutes}:${pad(hms.seconds)}`
+      : `${hms.hours}:${pad(hms.minutes)}:${pad(hms.seconds)}`;
+  const width =
+    timeString.length < 5 ? 'w-10' : timeString.length < 6 ? 'w-12' : 'w-20';
 
-  if (hms.hours < 1) {
-    return (
-      <span className="w-10 flex justify-center">{`${hms.minutes}:${pad(
-        hms.seconds,
-      )}`}</span>
-    );
-  }
-
-  return (
-    <span className="w-20 flex justify-center">
-      {`${hms.hours}:${pad(hms.minutes)}:${pad(hms.seconds)}`}
-    </span>
-  );
+  return <span className={classNames(width, className)}>{timeString}</span>;
 };
 
 export default function Time({ duration, progress }: TimeProps) {
   return (
     <div className="flex flex-row">
-      <TimeStamp seconds={(progress / 100) * duration} />
+      <TimeStamp
+        className="flex justify-start"
+        seconds={(progress / 100) * duration}
+      />
       /
-      <TimeStamp seconds={duration} />
+      <TimeStamp className="flex justify-end" seconds={duration} />
     </div>
   );
 }
