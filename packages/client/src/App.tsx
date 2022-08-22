@@ -1,11 +1,10 @@
-import { Button, Container } from '@chakra-ui/react';
+import { Button, CircularProgress, Container, Heading } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
 import { useCallback } from 'react';
 import { Sound } from './components/Sound';
 import useLogin from './hooks/useLogin';
 import { useSounds } from './hooks/useSounds';
 import Player from './components/Player';
-import ProgressHeader from './components/ProgressHeader';
 import SoundDataAccordion from './components/Sound/SoundDataAccordion';
 import SoundData from './components/Sound/SoundData';
 import SoundTags from './components/Sound/SoundTags';
@@ -17,8 +16,10 @@ const App = () => {
 
   const NoSounds = () => (
     <>
-      <ProgressHeader />
-      Loading sounds...
+      <div className="mt-44 flex flex-col justify-center items-center gap-4">
+        <Heading textColor="green.300">Loading sounds...</Heading>
+        <CircularProgress isIndeterminate color="green.300" />
+      </div>
     </>
   );
 
