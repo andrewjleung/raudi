@@ -8,25 +8,21 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
       reply.code(401).send('Unauthorized.');
     } else {
       const accessToken = request.freesound.access_token;
-      const randomSoundIds = EitherAsync.all(
+      const randomSoundIds = await EitherAsync.rights(
         [...Array(5)].map(() => EitherAsync.fromPromise(getRandomSoundId)),
       );
+      const randomSounds = await EitherAsync.rights(
+        randomSoundIds.map((id) =>
+          EitherAsync.fromPromise(() => getSound(accessToken)(id)),
+        ),
+      );
 
-      const getRandomSounds = (ids: string[]) =>
-        EitherAsync.all(
-          ids.map((id) =>
-            EitherAsync.fromPromise(() => getSound(accessToken)(id)),
-          ),
-        );
+      if (randomSounds.length < 1) {
+        reply.code(429).send('Too Many Requests');
+        return;
+      }
 
-      return randomSoundIds.chain(getRandomSounds).caseOf({
-        Left: (l) => {
-          reply.code(500).send(l);
-        },
-        Right: (r) => {
-          reply.code(200).send(r);
-        },
-      });
+      reply.code(200).send(randomSounds);
     }
   });
 
