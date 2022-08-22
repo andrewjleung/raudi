@@ -56,14 +56,10 @@ const App = () => {
     );
   }
 
-  return (
-    <Container>
-      {sound.caseOf({
-        Nothing: NoSounds,
-        Just: SoundPlayer,
-      })}
-    </Container>
-  );
+  return sound.caseOf({
+    Nothing: NoSounds,
+    Just: SoundPlayer,
+  });
 };
 
 export default App;

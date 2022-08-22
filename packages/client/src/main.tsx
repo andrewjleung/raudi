@@ -6,6 +6,7 @@ import App from './App';
 import { LoginContext, LoginState } from './hooks/useLogin';
 import './index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import NavBar from './components/NavBar';
 
 const queryClient = new QueryClient();
 
@@ -18,9 +19,11 @@ const Main = () => {
         <LoginContext.Provider value={{ loginState, setLoginState }}>
           <ChakraProvider>
             <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<App />} />
-              </Routes>
+              <NavBar>
+                <Routes>
+                  <Route path="/" element={<App />} />
+                </Routes>
+              </NavBar>
             </BrowserRouter>
           </ChakraProvider>
         </LoginContext.Provider>
