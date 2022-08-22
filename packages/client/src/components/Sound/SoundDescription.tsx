@@ -2,6 +2,7 @@ import { Link } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
 import DOMPurify from 'dompurify';
 import { useEffect, useState } from 'react';
+import { Setter } from '../../types';
 
 const CHAR_LIMIT = 200;
 
@@ -11,53 +12,64 @@ const truncateByWord = (str: string, charLimit: number) => {
   return str.slice(0, lastWhitespace);
 };
 
+type UseTruncation = {
+  truncated: string;
+  shouldTruncate: boolean;
+  isTruncated: boolean;
+  setIsTruncated: Setter<boolean>;
+};
+
+const useTruncation = (str: string, charLimit: number): UseTruncation => {
+  const [isTruncated, setIsTruncated] = useState(true);
+
+  // Only truncate if half or more of the string would be truncated by the
+  // character limit.
+  const shouldTruncate = str.length > charLimit * 2;
+
+  useEffect(() => {
+    setIsTruncated(true);
+  }, [str]);
+
+  return {
+    truncated:
+      shouldTruncate && isTruncated
+        ? `${truncateByWord(str, charLimit)}...`
+        : str,
+    shouldTruncate,
+    isTruncated,
+    setIsTruncated,
+  };
+};
+
 type SoundDescriptionProps = {
   sound: FreesoundSoundInstance;
   charLimit?: number;
+  className?: string;
 };
 
 export default function SoundDescription({
   sound,
   charLimit = CHAR_LIMIT,
 }: SoundDescriptionProps) {
-  const [expanded, setExpanded] = useState(false);
   const sanitizedDescription = DOMPurify.sanitize(sound.description);
-
-  useEffect(() => {
-    setExpanded(false);
-  }, [sound]);
-
-  // Only truncate descriptions that would have half or more of their text
-  // truncated by the character limit.
-  if (sanitizedDescription.length < charLimit * 2) {
-    return <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />;
-  }
-
-  if (!expanded) {
-    return (
-      <>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: `${truncateByWord(sanitizedDescription, charLimit)}...`,
-          }}
-        />
-        <Link color="teal.500" onClick={() => setExpanded(true)}>
-          Show more
-        </Link>
-      </>
-    );
-  }
+  const { truncated, shouldTruncate, isTruncated, setIsTruncated } =
+    useTruncation(sanitizedDescription, charLimit);
 
   return (
     <>
       <div
         dangerouslySetInnerHTML={{
-          __html: sanitizedDescription,
+          __html: truncated,
         }}
       />
-      <Link color="teal.500" onClick={() => setExpanded(false)}>
-        Show less
-      </Link>
+      {shouldTruncate && (
+        <Link
+          color="teal.500"
+          onClick={() => setIsTruncated((truncated) => !truncated)}
+        >
+          Show {isTruncated ? 'more' : 'less'}
+        </Link>
+      )}
     </>
   );
 }
