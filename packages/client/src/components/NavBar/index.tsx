@@ -1,24 +1,17 @@
-import { Container, Heading } from '@chakra-ui/react';
+import { Heading } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import NavButton from './NavButton';
 
-type NavBarProps = {
-  children: React.ReactNode;
-};
-
-export default function NavBar({ children }: NavBarProps) {
+export default function NavBar() {
   const navigate = useNavigate();
 
   return (
-    <Container>
-      <div className="h-20 sticky top-0 flex flex-row items-center gap-1 bg-white border-b-1">
-        <div className="grow cursor-pointer" onClick={() => navigate('/')}>
-          <Heading textColor="red.300">raudi</Heading>
-        </div>
-        <NavButton href="/about">About</NavButton>
-        <NavButton href="/contact">Contact</NavButton>
+    <div className="h-20 sticky top-0 flex flex-row items-center gap-1 bg-white border-b-1">
+      <div className="grow cursor-pointer" onClick={() => navigate('/')}>
+        <Heading textColor="red.300">raudi</Heading>
       </div>
-      {children}
-    </Container>
+      <NavButton href="/about">About</NavButton>
+      <NavButton href="/contact">Contact</NavButton>
+    </div>
   );
 }

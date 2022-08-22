@@ -1,4 +1,4 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Container } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { LoginContext, LoginState } from './hooks/useLogin';
 import './index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 
 const queryClient = new QueryClient();
 
@@ -18,13 +19,17 @@ const Main = () => {
       <QueryClientProvider client={queryClient}>
         <LoginContext.Provider value={{ loginState, setLoginState }}>
           <ChakraProvider>
-            <BrowserRouter>
-              <NavBar>
-                <Routes>
-                  <Route path="/" element={<App />} />
-                </Routes>
-              </NavBar>
-            </BrowserRouter>
+            <Container>
+              <div className="flex flex-col min-h-screen">
+                <BrowserRouter>
+                  <NavBar />
+                  <Routes>
+                    <Route path="/" element={<App />} />
+                  </Routes>
+                  <Footer className="mt-auto" />
+                </BrowserRouter>
+              </div>
+            </Container>
           </ChakraProvider>
         </LoginContext.Provider>
       </QueryClientProvider>

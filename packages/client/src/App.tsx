@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Container, Heading } from '@chakra-ui/react';
+import { Button, CircularProgress, Heading } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
 import { useCallback } from 'react';
 import { Sound } from './components/Sound';
