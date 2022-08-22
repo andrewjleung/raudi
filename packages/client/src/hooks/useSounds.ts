@@ -7,7 +7,7 @@ import { useInfiniteQuery, InfiniteData } from '@tanstack/react-query';
 import useLogin from './useLogin';
 import useInterval from './useInterval';
 
-const STAYAHEAD_PAGE_COUNT = 4;
+const STAYAHEAD_SOUND_COUNT = 19;
 const POLL_TIME = 2000;
 
 export type UseSounds = {
@@ -52,9 +52,16 @@ const getNextSoundLocation = (
 // TODO: Cleanup sounds after a certain threshold, currently they will keep
 //       building up forever.
 export const useSounds = (): UseSounds => {
-  const [soundLocation, setSoundLocation] = useState<SoundLocation>(
-    DEFAULT_SOUND_LOCATION,
-  );
+  const [soundLocation, setSoundLocation] = useState(DEFAULT_SOUND_LOCATION);
+
+  // These two pieces of state are used to keep track of number counts for which
+  // sound the user is on and how many sounds there are total, since sound data
+  // queried through `react-query` is paginated. This is used so that the app
+  // knows how ahead it is in terms of number of sounds so that it can decide
+  // whether to keep fetching sounds in the background.
+  const [totalSounds, setTotalSounds] = useState(0);
+  const [currentSound, setCurrentSound] = useState(1);
+
   const authorizedFetch = useAuthorizedFetch();
   const { isLoggedIn } = useLogin();
 
@@ -62,7 +69,12 @@ export const useSounds = (): UseSounds => {
   const { data, error, fetchNextPage, isFetching, isFetchingNextPage } =
     useInfiniteQuery(
       ['sounds', isLoggedIn],
-      () => fetchSounds(authorizedFetch).then((value) => value.unsafeCoerce()),
+      () =>
+        fetchSounds(authorizedFetch).then((value) => {
+          const page = value.unsafeCoerce();
+          setTotalSounds((totalSounds) => totalSounds + page.length);
+          return page;
+        }),
       {
         refetchOnWindowFocus: false,
         // Random sound data is not inherently paginated, so no pagination
@@ -75,23 +87,30 @@ export const useSounds = (): UseSounds => {
       },
     );
 
-  useInterval(() => {
-    const isAhead = () =>
-      data !== undefined &&
-      data.pages.length - soundLocation.page >= STAYAHEAD_PAGE_COUNT;
+  useInterval(
+    () => {
+      if (data === undefined) {
+        return;
+      }
 
-    if (!isFetchingNextPage && !isAhead()) {
       fetchNextPage();
-    }
-  }, POLL_TIME);
+    },
+    POLL_TIME,
+    !isFetchingNextPage && totalSounds - currentSound < STAYAHEAD_SOUND_COUNT,
+  );
 
   const getNextSound = () =>
-    getNextSoundLocation(data, soundLocation).ifJust(setSoundLocation);
+    getNextSoundLocation(data, soundLocation).ifJust((soundLocation) => {
+      setCurrentSound((currentSound) => currentSound + 1);
+      setSoundLocation(soundLocation);
+    });
 
   // Reset the sound location when the user gets logged out.
   useEffect(() => {
     if (!isLoggedIn) {
       setSoundLocation(DEFAULT_SOUND_LOCATION);
+      setTotalSounds(0);
+      setCurrentSound(1);
     }
   }, [isLoggedIn]);
 

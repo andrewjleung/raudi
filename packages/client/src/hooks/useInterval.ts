@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 // Credit: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-export default (callback: () => void, delay?: number) => {
+export default (callback: () => void, delay: number, shouldPoll: boolean) => {
   const savedCallback = useRef();
 
   // Remember the latest callback.
@@ -15,9 +15,9 @@ export default (callback: () => void, delay?: number) => {
       savedCallback.current();
     };
 
-    if (delay !== null) {
+    if (shouldPoll) {
       const id = setInterval(tick, delay);
       return () => clearInterval(id);
     }
-  }, [delay]);
+  }, [delay, shouldPoll]);
 };
