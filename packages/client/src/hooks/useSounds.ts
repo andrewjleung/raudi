@@ -93,8 +93,10 @@ export const useSounds = (): UseSounds => {
   }, [isLoggedIn]);
 
   return {
-    sound: data
-      ? Just(data.pages[soundLocation.page][soundLocation.soundIndex])
+    sound:
+      isLoggedIn && data
+        ? // TODO: ensure this access is safe.
+          Just(data.pages[soundLocation.page][soundLocation.soundIndex])
       : Nothing,
     getNextSound,
     canGetNextSound: getNextSoundLocation(data, soundLocation).isJust(),
