@@ -21,7 +21,7 @@ export const VolumeSlider = ({ Volume, Muted }: VolumeProps) => {
 
   return (
     <PlayerSlider
-      width="10em"
+      width="8em"
       aria-label="Volume slider"
       defaultValue={volume}
       onChange={(v) => setVolume(v)}
