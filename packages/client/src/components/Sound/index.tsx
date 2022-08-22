@@ -15,8 +15,14 @@ type SoundProps = {
 const Sound = ({ sound }: SoundProps) => {
   return (
     <div>
-      <Heading>{sound.name}</Heading>
-      <Heading size="xs">{sound.username}</Heading>
+      <div className="h-20 flex items-end">
+        <Heading size="lg" noOfLines={2}>
+          {sound.name}
+        </Heading>
+      </div>
+      <Heading className="mb-1" size="xs">
+        {sound.username}
+      </Heading>
       <Image
         height={SOUND_IMAGE_H}
         width={SOUND_IMAGE_W}
