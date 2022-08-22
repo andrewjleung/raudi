@@ -44,13 +44,15 @@ const App = () => {
 
   if (!isLoggedIn) {
     return (
-      <Button
-        onClick={() => {
-          window.location.replace(`http://localhost:3000/auth/login`);
-        }}
-      >
-        Login with Freesound
-      </Button>
+      <div className="mt-40 flex justify-center">
+        <Button
+          onClick={() => {
+            window.location.replace(`http://localhost:3000/auth/login`);
+          }}
+        >
+          Login with Freesound
+        </Button>
+      </div>
     );
   }
 
