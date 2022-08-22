@@ -1,8 +1,8 @@
 import { Link } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/types';
-import DOMPurify from 'dompurify';
 import { useEffect, useState } from 'react';
 import { Setter } from '../../types';
+import DOMPurify from 'dompurify';
 
 const CHAR_LIMIT = 200;
 
@@ -50,13 +50,14 @@ type SoundDescriptionProps = {
 export default function SoundDescription({
   sound,
   charLimit = CHAR_LIMIT,
+  className = '',
 }: SoundDescriptionProps) {
   const sanitizedDescription = DOMPurify.sanitize(sound.description);
   const { truncated, shouldTruncate, isTruncated, setIsTruncated } =
     useTruncation(sanitizedDescription, charLimit);
 
   return (
-    <>
+    <div className={className}>
       <div
         dangerouslySetInnerHTML={{
           __html: truncated,
@@ -70,6 +71,6 @@ export default function SoundDescription({
           Show {isTruncated ? 'more' : 'less'}
         </Link>
       )}
-    </>
+    </div>
   );
 }

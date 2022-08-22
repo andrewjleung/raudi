@@ -32,7 +32,7 @@ const App = () => {
           canGetNextSound={canGetNextSound}
         />
         <SoundDataAccordion>
-            <SoundDescription sound={sound} />
+            <SoundDescription className="pb-1" sound={sound} />
           <SoundTags sound={sound} />
           <SoundData sound={sound} />
         </SoundDataAccordion>
