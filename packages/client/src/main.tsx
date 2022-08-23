@@ -8,6 +8,9 @@ import './index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
+import About from './routes/About';
+import Contact from './routes/Contact';
+import PrivacyPolicy from './routes/PrivacyPolicy';
 
 const queryClient = new QueryClient();
 
@@ -25,6 +28,9 @@ const Main = () => {
                   <NavBar />
                   <Routes>
                     <Route path="/" element={<App />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
                   </Routes>
                   <Footer className="mt-auto" />
                 </BrowserRouter>
