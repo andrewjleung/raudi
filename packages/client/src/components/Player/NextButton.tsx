@@ -17,7 +17,6 @@ export default function NextButton({ onClick, disabled }: NextButtonProps) {
       'active:text-gray-200': !disabled,
       'active:text-red-200': disabled,
     },
-    'active:scale-105',
   );
 
   return (
