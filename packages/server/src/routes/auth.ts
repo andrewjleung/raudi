@@ -75,7 +75,7 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
                 signed: true,
                 secure: true,
                 httpOnly: true,
-                sameSite: true,
+                sameSite: 'strict',
                 expires: expireDate,
               })
               .redirect(302, 'http://localhost:5173');

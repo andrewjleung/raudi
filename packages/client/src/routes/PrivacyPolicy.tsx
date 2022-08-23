@@ -10,8 +10,8 @@ export default function PrivacyPolicy() {
         Raudi is built using the Freesound API. By choosing to use this app, you
         agree to the use of your Freesound account to retrieve and download
         sounds from Freesound. Raudi will never take any other actions on your
-        behalf. If you would ever like to revoke Raudi's permissions, please
-        visit your account settings on Freesound{' '}
+        behalf. If you would ever like to revoke Raudi&apos;s permissions,
+        please visit your account settings on Freesound{' '}
         <Link
           textColor="blue.500"
           href="https://freesound.org/home/app_permissions/"

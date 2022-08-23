@@ -9,12 +9,10 @@ import SoundDataAccordion from './components/Sound/SoundDataAccordion';
 import SoundData from './components/Sound/SoundData';
 import SoundTags from './components/Sound/SoundTags';
 import SoundDescription from './components/Sound/SoundDescription';
-import useSoundDownload from './hooks/useSoundDownload';
 
 const App = () => {
   const { isLoggedIn } = useLogin(true);
   const { sound, getNextSound, canGetNextSound, isFetching } = useSounds();
-  const downloadSound = useSoundDownload();
 
   const NoSounds = () => (
     <>
@@ -30,10 +28,9 @@ const App = () => {
       <div className="flex flex-col gap-4">
         <Sound sound={sound} />
         <Player
-          src={sound.previews['preview-hq-mp3']}
+          sound={sound}
           onClickNext={getNextSound}
           canGetNextSound={canGetNextSound}
-          onDownload={() => downloadSound(sound)}
         />
         <SoundDataAccordion>
           <SoundDescription className="mb-1" sound={sound} />
@@ -42,7 +39,7 @@ const App = () => {
         </SoundDataAccordion>
       </div>
     ),
-    [canGetNextSound, downloadSound, getNextSound],
+    [canGetNextSound, getNextSound],
   );
 
   if (!isLoggedIn) {

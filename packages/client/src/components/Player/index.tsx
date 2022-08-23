@@ -7,6 +7,7 @@ import { VolumeSetter, VolumeButton, VolumeSlider } from './VolumeSetter';
 import Time from './Time';
 import NextButton from './NextButton';
 import { Box, Skeleton, Spacer } from '@chakra-ui/react';
+import { FreesoundSoundInstance } from '@raudi/types';
 
 const NOOP = () => {
   return;
@@ -14,17 +15,15 @@ const NOOP = () => {
 const DEFAULT_VOLUME = 50;
 
 type PlayerProps = {
-  src: string;
+  sound: FreesoundSoundInstance;
   onClickNext: () => void;
   canGetNextSound: boolean;
-  onDownload: () => void;
 };
 
 export default function Player({
-  src,
+  sound,
   onClickNext,
   canGetNextSound,
-  onDownload,
 }: PlayerProps) {
   const audioRef = useRef<HTMLMediaElement>(null);
 
@@ -50,7 +49,7 @@ export default function Player({
     setPlaying(false);
     setCurrentTime(0);
     setProgress(0);
-  }, [src, setPlaying, setCurrentTime, setProgress]);
+  }, [sound, setPlaying, setCurrentTime, setProgress]);
 
   // TODO: Really need to clean up this pattern...
   useEffect(() => {
@@ -110,7 +109,7 @@ export default function Player({
         <div className="pl-3 pr-3 flex flex-row w-full gap-3">
           <PlayPauseButton Playing={Playing} canPlay={canPlay} />
           <NextButton onClick={onClickNext} disabled={!canGetNextSound} />
-          <DownloadButton onClick={onDownload} />
+          <DownloadButton sound={sound} />
           <Spacer className="grow" />
           <VolumeSetter>
             <VolumeButton Volume={Volume} Muted={Muted} />
@@ -136,7 +135,7 @@ export default function Player({
 
       <audio
         ref={audioRef}
-        src={src}
+        src={sound.previews['preview-hq-mp3']}
         onAbort={NOOP}
         onCanPlay={() => setCanPlay(true)}
         onCanPlayThrough={NOOP}

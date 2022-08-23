@@ -1,12 +1,22 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import { FreesoundSoundInstance } from '@raudi/types';
 
-type DownloadButtonProps = {
-  onClick: () => void;
+// TODO: Move somewhere better and test.
+const getSoundFileName = (sound: FreesoundSoundInstance) => {
+  if (sound.name.includes('.')) {
+    return sound.name;
+  }
+
+  return `${sound.name}.${sound.type}`;
 };
 
-export default function DownloadButton({ onClick }: DownloadButtonProps) {
+type DownloadButtonProps = {
+  sound: FreesoundSoundInstance;
+};
+
+export default function DownloadButton({ sound }: DownloadButtonProps) {
   const iconClassNames = classNames(
     'w-7 h-7',
     'cursor-pointer',
@@ -15,11 +25,16 @@ export default function DownloadButton({ onClick }: DownloadButtonProps) {
   );
 
   return (
-    <div
-      onClick={onClick}
+    <a
       className="w-10 h-10 flex justify-center items-center"
+      href={`http://localhost:3000/sounds/${
+        sound.id
+      }/download?filename=${getSoundFileName(sound)}&filesize=${
+        sound.filesize
+      }`}
+      download={getSoundFileName(sound)}
     >
       <FontAwesomeIcon className={iconClassNames} icon={faDownload} />
-    </div>
+    </a>
   );
 }

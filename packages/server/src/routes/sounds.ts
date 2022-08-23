@@ -34,11 +34,12 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
           ),
         );
 
-      randomSoundIds
+      await randomSoundIds
         .then(getRandomSounds)
         .then((sounds) => {
           if (sounds.length < 1) {
             reply.code(500);
+            return;
           }
 
           reply.code(200).send(sounds);
@@ -57,7 +58,7 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
         querystring: SoundDownloadInfo,
       },
     },
-    async (request, reply) => {
+    (request, reply) => {
       if (request.freesound === undefined) {
         reply.code(401).send('Unauthorized.');
       } else {
@@ -73,7 +74,7 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
                 // https://github.com/eligrey/FileSaver.js/wiki/Saving-a-remote-file
                 'Content-Type': 'application/octet-stream; charset=utf-8',
                 'Content-Disposition': `attachment; filename=${filename} filename*=${filename}`,
-                'Content-length': filesize,
+                'Content-Length': filesize,
               })
               .send(getDownloadStream()),
         });

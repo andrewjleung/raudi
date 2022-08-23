@@ -4,7 +4,7 @@ import useLogin, { LoginState } from './useLogin';
 export type AuthorizedFetch = (
   input: RequestInfo | URL,
   init?: RequestInit,
-) => Promise<Either<unknown, unknown>>;
+) => Promise<Either<unknown, Response>>;
 
 export const useAuthorizedFetch = (): AuthorizedFetch => {
   const { transitionLoginState } = useLogin();
@@ -25,8 +25,7 @@ export const useAuthorizedFetch = (): AuthorizedFetch => {
         return Left(Error('Network response was not ok.'));
       }
 
-      const parsedResponse = await response.json();
-      return Right(parsedResponse);
+      return Right(response);
     } catch (e) {
       return Left(e);
     }
