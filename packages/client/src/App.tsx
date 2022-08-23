@@ -9,10 +9,12 @@ import SoundDataAccordion from './components/Sound/SoundDataAccordion';
 import SoundData from './components/Sound/SoundData';
 import SoundTags from './components/Sound/SoundTags';
 import SoundDescription from './components/Sound/SoundDescription';
+import useSoundDownload from './hooks/useSoundDownload';
 
 const App = () => {
   const { isLoggedIn } = useLogin(true);
   const { sound, getNextSound, canGetNextSound, isFetching } = useSounds();
+  const downloadSound = useSoundDownload();
 
   const NoSounds = () => (
     <>
@@ -31,6 +33,7 @@ const App = () => {
           src={sound.previews['preview-hq-mp3']}
           onClickNext={getNextSound}
           canGetNextSound={canGetNextSound}
+          onDownload={() => downloadSound(sound)}
         />
         <SoundDataAccordion>
           <SoundDescription className="mb-1" sound={sound} />
@@ -39,7 +42,7 @@ const App = () => {
         </SoundDataAccordion>
       </div>
     ),
-    [canGetNextSound, getNextSound],
+    [canGetNextSound, downloadSound, getNextSound],
   );
 
   if (!isLoggedIn) {

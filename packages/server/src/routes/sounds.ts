@@ -1,6 +1,22 @@
 import { FastifyPluginCallback } from 'fastify';
 import { EitherAsync } from 'purify-ts';
-import { getRandomSoundId, getSound } from '../apis/freesound.js';
+import {
+  downloadSound,
+  getRandomSoundId,
+  getSound,
+} from '../apis/freesound.js';
+import { Static, Type } from '@sinclair/typebox';
+
+const SoundId = Type.Number();
+
+type SoundId = Static<typeof SoundId>;
+
+const SoundDownloadInfo = Type.Object({
+  filename: Type.String(),
+  filesize: Type.Number(),
+});
+
+type SoundDownloadInfo = Static<typeof SoundDownloadInfo>;
 
 const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   fastify.get('/random', async (request, reply) => {
@@ -30,6 +46,40 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
         .catch((e) => reply.code(500).send(e));
     }
   });
+
+  fastify.get<{ Params: { soundId: SoundId }; Querystring: SoundDownloadInfo }>(
+    '/:soundId/download',
+    {
+      schema: {
+        params: {
+          soundId: SoundId,
+        },
+        querystring: SoundDownloadInfo,
+      },
+    },
+    async (request, reply) => {
+      if (request.freesound === undefined) {
+        reply.code(401).send('Unauthorized.');
+      } else {
+        const accessToken = request.freesound.access_token;
+        const { soundId } = request.params;
+        const { filename, filesize } = request.query;
+
+        downloadSound(accessToken)(soundId).caseOf({
+          Left: (l) => reply.code(500).send(l),
+          Right: (getDownloadStream) =>
+            reply
+              .headers({
+                // https://github.com/eligrey/FileSaver.js/wiki/Saving-a-remote-file
+                'Content-Type': 'application/octet-stream; charset=utf-8',
+                'Content-Disposition': `attachment; filename=${filename} filename*=${filename}`,
+                'Content-length': filesize,
+              })
+              .send(getDownloadStream()),
+        });
+      }
+    },
+  );
 
   done();
 };

@@ -1,5 +1,5 @@
 import { Either, Left, Right } from 'purify-ts';
-import got from 'got';
+import got, { Request } from 'got';
 import {
   AccessTokenResponse,
   FreesoundSoundInstance,
@@ -100,4 +100,22 @@ const getMe =
     }
   };
 
-export { getAccessToken, getRandomSoundId, getSound, getMe };
+const downloadSound =
+  (accessToken: string) =>
+  (id: number): Either<unknown, () => Request> => {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    try {
+      return Right(() =>
+        got.stream(`${FREESOUND_API_URL}/sounds/${id}/download`, options),
+      );
+    } catch (e) {
+      return Left(e);
+    }
+  };
+
+export { getAccessToken, getRandomSoundId, getSound, getMe, downloadSound };

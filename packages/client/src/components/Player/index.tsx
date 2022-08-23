@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Controls from './Controls';
+import DownloadButton from './DownloadButton';
 import PlayPauseButton from './PlayPauseButton';
 import Seeker from './Seeker';
 import { VolumeSetter, VolumeButton, VolumeSlider } from './VolumeSetter';
@@ -16,12 +17,14 @@ type PlayerProps = {
   src: string;
   onClickNext: () => void;
   canGetNextSound: boolean;
+  onDownload: () => void;
 };
 
 export default function Player({
   src,
   onClickNext,
   canGetNextSound,
+  onDownload,
 }: PlayerProps) {
   const audioRef = useRef<HTMLMediaElement>(null);
 
@@ -107,6 +110,7 @@ export default function Player({
         <div className="pl-3 pr-3 flex flex-row w-full gap-3">
           <PlayPauseButton Playing={Playing} canPlay={canPlay} />
           <NextButton onClick={onClickNext} disabled={!canGetNextSound} />
+          <DownloadButton onClick={onDownload} />
           <Spacer className="grow" />
           <VolumeSetter>
             <VolumeButton Volume={Volume} Muted={Muted} />
