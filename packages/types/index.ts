@@ -1,4 +1,12 @@
-import { array, Codec, GetType, nullable, number, string } from "purify-ts";
+import {
+  array,
+  Codec,
+  GetType,
+  nullable,
+  number,
+  string,
+  exactly,
+} from "purify-ts";
 
 const AccessTokenResponseProperties = {
   access_token: string,
@@ -48,7 +56,7 @@ export const FreesoundSoundInstanceCodec = Codec.interface({
   geotag: nullable(string),
   created: string,
   license: string,
-  type: string,
+  type: exactly("wav", "aif", "aiff", "mp3", "m4a", "flac"),
   channels: number,
   filesize: number,
   bitrate: number,
