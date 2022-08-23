@@ -7,7 +7,7 @@ import { Static, Type } from '@sinclair/typebox';
 import { AccessTokenResponse, AccessTokenJwtPayload } from '@raudi/types';
 
 const HOST_COOKIE_PREFIX = '__Host-';
-const JWT_COOKIE_NAME = `${HOST_COOKIE_PREFIX}accessData`;
+const JWT_COOKIE_NAME = `${HOST_COOKIE_PREFIX}ACCESS_DATA`;
 const ACCESS_DURATION_MS = 1 * 60 * 60 * 1000; // 1 hour.
 
 const AuthCode = Type.Object({
