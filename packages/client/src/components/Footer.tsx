@@ -1,3 +1,4 @@
+import { Link } from '@chakra-ui/react';
 import cn from 'classnames';
 
 type FooterProps = {
@@ -9,11 +10,19 @@ export default function Footer({ className = '' }: FooterProps) {
     <div
       className={cn(
         className,
-        'h-10 flex justify-center items-center border-t-1',
+        'h-16 flex flex-col justify-center items-center border-t-1 gap-3',
         'text-xs',
       )}
     >
-      Made by Andrew Leung
+      <div>
+        Made by{' '}
+        <Link href="https://andrewjleung.me/" isExternal>
+          Andrew Leung
+        </Link>
+      </div>
+      <div className="flex flex-row gap-3">
+        <Link href="/privacy">Privacy Policy</Link>
+      </div>
     </div>
   );
 }
