@@ -6,9 +6,11 @@ import { useAuthorizedFetch } from './useAuthorizedFetch';
 import { useInfiniteQuery, InfiniteData } from '@tanstack/react-query';
 import useLogin from './useLogin';
 import useInterval from './useInterval';
+import mockSounds from '../../mockSounds';
 
-const STAYAHEAD_SOUND_COUNT = 19;
+const STAYAHEAD_SOUND_COUNT = 14;
 const POLL_TIME = 2000;
+const USE_MOCK = false;
 
 export type UseSounds = {
   sound: Maybe<FreesoundSoundInstance>;
@@ -69,12 +71,17 @@ export const useSounds = (): UseSounds => {
   const { data, error, fetchNextPage, isFetching, isFetchingNextPage } =
     useInfiniteQuery(
       ['sounds', isLoggedIn],
-      () =>
-        fetchSounds(authorizedFetch).then((value) => {
+      () => {
+        if (USE_MOCK) {
+          return mockSounds;
+        }
+
+        return fetchSounds(authorizedFetch).then((value) => {
           const page = value.unsafeCoerce();
           setTotalSounds((totalSounds) => totalSounds + page.length);
           return page;
-        }),
+        });
+      },
       {
         refetchOnWindowFocus: false,
         // Random sound data is not inherently paginated, so no pagination
@@ -84,6 +91,12 @@ export const useSounds = (): UseSounds => {
         getNextPageParam: () => isLoggedIn,
         cacheTime: 0,
         enabled: isLoggedIn,
+        initialData: USE_MOCK
+          ? {
+              pages: [mockSounds],
+              pageParams: [0],
+            }
+          : undefined,
       },
     );
 
@@ -96,7 +109,9 @@ export const useSounds = (): UseSounds => {
       fetchNextPage();
     },
     POLL_TIME,
-    !isFetchingNextPage && totalSounds - currentSound < STAYAHEAD_SOUND_COUNT,
+    !USE_MOCK &&
+      !isFetchingNextPage &&
+      totalSounds - currentSound < STAYAHEAD_SOUND_COUNT,
   );
 
   const getNextSound = () =>
