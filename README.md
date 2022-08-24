@@ -35,3 +35,20 @@ npm --prefix packages/client run dev
 ```bash
 npm --prefix packages/server run start
 ```
+
+## Note on Rate Limits
+
+A single unique client for the Freesound API has the following limits
+(via [docs](https://freesound.org/docs/api/overview.html#throttling)):
+
+- 60 requests per minute
+- 2000 requests per day
+
+Due to the slow speed of requests to Freesound, Raudi prefetches a set amount of sounds ahead of
+time to keep things as smooth as possible for the end user. This makes it somewhat easy to blow over
+the daily limit of requests if kept unchecked.
+
+A flag called `USE_MOCK` is available within the
+[`useSounds`](https://github.com/andrewjleung/raudi/blob/main/packages/client/src/hooks/useSounds.ts)
+hook to mitigate the amount of requests made in development. Setting this to `true` will defer to
+the usage of mock data rather than fetching sounds on the fly.
