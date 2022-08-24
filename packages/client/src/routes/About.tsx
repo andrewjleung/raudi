@@ -19,8 +19,8 @@ export default function About() {
           Freesound API
         </Link>
         . It is meant to be an inspiration tool for audio creatives to quickly
-        and cycle through random pieces of audio to use in or maybe even
-        jumpstart their next project.
+        cycle through random pieces of audio to use in or maybe even jumpstart
+        their next project.
       </Text>
       <Text>
         The philosophy of this tool is to help remove all the cruft, noise, and
