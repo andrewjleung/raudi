@@ -1,11 +1,14 @@
 import { Link } from '@chakra-ui/react';
 import cn from 'classnames';
+import { useNavigate } from 'react-router-dom';
 
 type FooterProps = {
   className?: string;
 };
 
 export default function Footer({ className = '' }: FooterProps) {
+  const navigate = useNavigate();
+
   return (
     <div
       className={cn(
@@ -20,8 +23,11 @@ export default function Footer({ className = '' }: FooterProps) {
           Andrew Leung
         </Link>
       </div>
-      <div className="flex flex-row gap-3">
-        <Link href="/privacy">Privacy Policy</Link>
+      <div
+        className="flex flex-row gap-3 hover:underline"
+        onClick={() => navigate('/privacy')}
+      >
+        Privacy Policy
       </div>
     </div>
   );

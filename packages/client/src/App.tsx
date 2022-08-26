@@ -1,66 +1,33 @@
-import { Button, CircularProgress, Heading } from '@chakra-ui/react';
-import { FreesoundSoundInstance } from '@raudi/types';
-import { useCallback } from 'react';
-import { Sound } from './components/Sound';
-import useLogin from './hooks/useLogin';
+import { Container } from '@chakra-ui/react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './index.css';
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
+import About from './routes/About';
+import Contact from './routes/Contact';
+import PrivacyPolicy from './routes/PrivacyPolicy';
 import { useSounds } from './hooks/useSounds';
-import Player from './components/Player';
-import SoundDataAccordion from './components/Sound/SoundDataAccordion';
-import SoundData from './components/Sound/SoundData';
-import SoundTags from './components/Sound/SoundTags';
-import SoundDescription from './components/Sound/SoundDescription';
-import { config } from '@raudi/types';
+import Home from './routes/Home';
 
 const App = () => {
-  const { isLoggedIn } = useLogin(true);
-  const { sound, getNextSound, canGetNextSound, isFetching } = useSounds();
+  const UseSounds = useSounds();
 
-  const NoSounds = () => (
-    <>
-      <div className="mt-44 flex flex-col justify-center items-center gap-4">
-        <Heading textColor="green.300">Loading sounds...</Heading>
-        <CircularProgress isIndeterminate color="green.300" />
+  return (
+    <Container>
+      <div className="flex flex-col min-h-screen">
+        <BrowserRouter>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home UseSounds={UseSounds} />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+          </Routes>
+          <Footer className="mt-auto" />
+        </BrowserRouter>
       </div>
-    </>
+    </Container>
   );
-
-  const SoundPlayer = useCallback(
-    (sound: FreesoundSoundInstance) => (
-      <div className="flex flex-col gap-4">
-        <Sound sound={sound} />
-        <Player
-          sound={sound}
-          onClickNext={getNextSound}
-          canGetNextSound={canGetNextSound}
-        />
-        <SoundDataAccordion>
-          <SoundDescription className="mb-1" sound={sound} />
-          <SoundTags sound={sound} />
-          <SoundData sound={sound} />
-        </SoundDataAccordion>
-      </div>
-    ),
-    [canGetNextSound, getNextSound],
-  );
-
-  if (!isLoggedIn) {
-    return (
-      <div className="mt-40 flex justify-center">
-        <Button
-          onClick={() => {
-            window.location.replace(`${config.serverUrl}/auth/login`);
-          }}
-        >
-          Login with Freesound
-        </Button>
-      </div>
-    );
-  }
-
-  return sound.caseOf({
-    Nothing: NoSounds,
-    Just: SoundPlayer,
-  });
 };
 
 export default App;
