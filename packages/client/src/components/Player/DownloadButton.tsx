@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
-import { FreesoundSoundInstance } from '@raudi/types';
+import { FreesoundSoundInstance, config } from '@raudi/types';
 
 // TODO: Move somewhere better and test.
 const getSoundFileName = (sound: FreesoundSoundInstance) => {
@@ -27,7 +27,7 @@ export default function DownloadButton({ sound }: DownloadButtonProps) {
   return (
     <a
       className="w-10 h-10 flex justify-center items-center"
-      href={`http://localhost:3000/sounds/${
+      href={`${config.serverUrl}/sounds/${
         sound.id
       }/download?filename=${getSoundFileName(sound)}&filesize=${
         sound.filesize

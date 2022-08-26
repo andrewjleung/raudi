@@ -9,6 +9,7 @@ import SoundDataAccordion from './components/Sound/SoundDataAccordion';
 import SoundData from './components/Sound/SoundData';
 import SoundTags from './components/Sound/SoundTags';
 import SoundDescription from './components/Sound/SoundDescription';
+import { config } from '@raudi/types';
 
 const App = () => {
   const { isLoggedIn } = useLogin(true);
@@ -47,7 +48,7 @@ const App = () => {
       <div className="mt-40 flex justify-center">
         <Button
           onClick={() => {
-            window.location.replace(`http://localhost:3000/auth/login`);
+            window.location.replace(`${config.serverUrl}/auth/login`);
           }}
         >
           Login with Freesound

@@ -1,4 +1,5 @@
 import { useToast } from '@chakra-ui/react';
+import { config } from '@raudi/types';
 import { createContext, useContext, useEffect } from 'react';
 import { Setter } from '../types';
 
@@ -60,7 +61,7 @@ export default function useLogin(verifyLogin = false): UseLogin {
 
     // TODO: Ensure that only a single `me` request can be in flight at one time.
     const fetchLoginState = async () => {
-      const response = await fetch('http://localhost:3000/me', {
+      const response = await fetch(`${config.serverUrl}/me`, {
         credentials: 'include',
         signal,
       });

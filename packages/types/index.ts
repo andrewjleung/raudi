@@ -114,3 +114,29 @@ export const FreesoundMeUserInstanceCodec = Codec.interface({
 export type FreesoundMeUserInstance = GetType<
   typeof FreesoundMeUserInstanceCodec
 >;
+
+export enum Environment {
+  DEV = "development",
+  PROD = "production",
+}
+
+export type Configuration = {
+  clientUrl: string;
+  serverUrl: string;
+};
+
+const buildConfig = (node_env?: string): Configuration => {
+  if (node_env === Environment.PROD) {
+    return {
+      clientUrl: "https://raudi.xyz",
+      serverUrl: "https://raudi.xyz/api",
+    };
+  }
+
+  return {
+    clientUrl: "http://localhost:5173",
+    serverUrl: "http://localhost:3000",
+  };
+};
+
+export const config = buildConfig(process.env.NODE_ENV);

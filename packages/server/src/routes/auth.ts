@@ -63,7 +63,7 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
         .map(makeAccessTokenJwt(fastify))
         .caseOf({
           Left: () => {
-            reply.redirect(302, 'http://localhost:5173');
+            reply.redirect(302, config.clientUrl);
           },
           Right: (jwt: string) => {
             const expireDate = new Date();
@@ -78,7 +78,7 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
                 sameSite: 'strict',
                 expires: expireDate,
               })
-              .redirect(302, 'http://localhost:5173');
+              .redirect(302, config.clientUrl);
           },
         }),
   );
