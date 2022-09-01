@@ -5,7 +5,10 @@
     "./packages/*"
   ],
   "scripts": {
-    "client": "npm run dev --prefix packages/client",
-    "server": "npm run dev --prefix packages/server"
+    "build-client": "docker build -t andrewjleung/raudi:client . -f ./packages/client/Dockerfile",
+    "client": "docker run -p 8080:8080 andrewjleung/raudi:client",
+    "build-server": "docker build -t andrewjleung/raudi:server . -f ./packages/server/Dockerfile",
+    "server": "docker run -p 3000:3000 andrewjleung/raudi:server",
+    "start": "docker compose up --build -d"
   }
 }

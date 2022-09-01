@@ -1,5 +1,5 @@
 import { Heading, Image, Skeleton } from '@chakra-ui/react';
-import { FreesoundSoundInstance } from '@raudi/types';
+import { FreesoundSoundInstance } from '@raudi/common';
 
 const SOUND_IMAGE_H = 128;
 const SOUND_IMAGE_W = 573;

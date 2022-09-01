@@ -1,10 +1,10 @@
 import {
   FreesoundSoundInstanceCodec,
   FreesoundSoundInstance,
-} from '@raudi/types';
+} from '@raudi/common';
 import { array, Either, EitherAsync } from 'purify-ts';
 import { AuthorizedFetch } from '../hooks/useAuthorizedFetch';
-import { config } from '@raudi/types';
+import config from '../config';
 
 export const fetchSounds = (
   authorizedFetch: AuthorizedFetch,

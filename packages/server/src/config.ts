@@ -1,35 +1,48 @@
-import { Configuration, config as parentConfig } from '@raudi/types';
+import {
+  DEV_HOST,
+  Environment,
+  PROD_HOST,
+  RaudiBaseConfig,
+} from '@raudi/common';
 import dotenv from 'dotenv';
 
-export type RaudiConfig = {
+export type RaudiServerConfig = {
   freesoundClientId: string;
   freesoundClientSecret: string;
-} & Configuration;
+  clientUrl: string;
+  serverUrl: string;
+} & RaudiBaseConfig;
 
 dotenv.config();
 
-const failAndExit = (message: string): never => {
-  // TODO: Setup more sophisticated and flexible logging. Perhaps Morgan?
-  console.log(message);
-  process.exit(1);
-};
-
-const getEnvOrExit = (key: string): string => {
+export const getEnvOrDefault = (key: string, def?: string): string => {
   const maybeValue = process.env[key];
 
-  if (maybeValue === null || maybeValue == undefined) {
-    return failAndExit(`Config is missing key ${key}`);
-  }
+  if (maybeValue === null || maybeValue === undefined) {
+    if (def === undefined) {
+      throw new Error(`Config is missing key: ${key}`);
+    }
 
-  if (!maybeValue) {
-    return failAndExit(`Config key ${key} is missing a value`);
+    return def;
   }
 
   return maybeValue;
 };
 
-export const config: RaudiConfig = {
-  freesoundClientId: getEnvOrExit('FREESOUND_CLIENT_ID'),
-  freesoundClientSecret: getEnvOrExit('FREESOUND_CLIENT_SECRET'),
-  ...parentConfig,
+const buildConfig = (): RaudiServerConfig => {
+  const isProd = process.env.NODE_ENV === Environment.PROD;
+  const clientPort = Number(getEnvOrDefault('CLIENT_PORT'));
+  const serverPort = Number(getEnvOrDefault('SERVER_PORT'));
+
+  return {
+    clientPort,
+    serverPort,
+    host: isProd ? PROD_HOST : DEV_HOST,
+    freesoundClientId: getEnvOrDefault('FREESOUND_CLIENT_ID'),
+    freesoundClientSecret: getEnvOrDefault('FREESOUND_CLIENT_SECRET'),
+    clientUrl: isProd ? `http://${PROD_HOST}` : `http://${DEV_HOST}:80`,
+    serverUrl: isProd ? `http://${PROD_HOST}/api` : `http://${DEV_HOST}:80/api`,
+  };
 };
+
+export default buildConfig();

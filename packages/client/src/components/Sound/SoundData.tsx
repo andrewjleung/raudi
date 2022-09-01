@@ -7,7 +7,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { FreesoundSoundInstance } from '@raudi/types';
+import { FreesoundSoundInstance } from '@raudi/common';
 
 const DATA_COLUMNS: Array<keyof FreesoundSoundInstance> = [
   'created',

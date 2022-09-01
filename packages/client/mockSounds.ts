@@ -1,4 +1,4 @@
-import { FreesoundSoundInstance } from '../types/index';
+import { FreesoundSoundInstance } from '@raudi/common';
 
 const mockSounds: FreesoundSoundInstance[] = [
   {

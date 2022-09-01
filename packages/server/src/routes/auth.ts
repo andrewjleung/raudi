@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from 'purify-ts';
-import { config } from '../config.js';
+import config from '../config.js';
 import { encrypt } from '../encryption.js';
 import { getAccessToken, getMe } from '../apis/freesound.js';
 import { FastifyInstance, FastifyPluginCallback } from 'fastify';
 import { Static, Type } from '@sinclair/typebox';
-import { AccessTokenResponse, AccessTokenJwtPayload } from '@raudi/types';
+import { AccessTokenResponse, AccessTokenJwtPayload } from '@raudi/common';
 
 const HOST_COOKIE_PREFIX = '__Host-';
 const JWT_COOKIE_NAME = `${HOST_COOKIE_PREFIX}ACCESS_DATA`;

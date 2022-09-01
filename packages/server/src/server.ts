@@ -4,9 +4,10 @@ import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { soundsRoutes } from './routes/sounds.js';
-import { AccessTokenJwtPayload } from '@raudi/types';
+import { AccessTokenJwtPayload } from '@raudi/common';
 import { authRoutes } from './routes/auth.js';
 import useJwt from './hooks/useJwt.js';
+import config from './config.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -49,7 +50,10 @@ const registerHooks = () => {
 
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000 });
+    await fastify.listen({
+      host: '0.0.0.0',
+      port: config.serverPort,
+    });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

@@ -1,5 +1,5 @@
 import { Link } from '@chakra-ui/react';
-import { FreesoundSoundInstance } from '@raudi/types';
+import { FreesoundSoundInstance } from '@raudi/common';
 import { useEffect, useState } from 'react';
 import { Setter } from '../../types';
 import DOMPurify from 'dompurify';

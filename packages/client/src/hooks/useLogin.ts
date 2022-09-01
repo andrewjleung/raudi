@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import { config } from '@raudi/types';
+import config from '../config';
 import { createContext, useContext, useEffect } from 'react';
 import { Setter } from '../types';
 

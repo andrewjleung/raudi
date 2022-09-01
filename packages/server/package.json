@@ -28,7 +28,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "@raudi/types": "*",
+    "@raudi/common": "*",
     "@types/jest": "^28.1.5",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
@@ -36,6 +36,7 @@
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.6",
+    "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   }
 }

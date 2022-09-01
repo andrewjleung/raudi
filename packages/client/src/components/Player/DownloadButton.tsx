@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
-import { FreesoundSoundInstance, config } from '@raudi/types';
+import { FreesoundSoundInstance } from '@raudi/common';
+import config from '../../config';
 
 // TODO: Move somewhere better and test.
 const getSoundFileName = (sound: FreesoundSoundInstance) => {

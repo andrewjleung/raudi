@@ -7,8 +7,8 @@ import {
   AccessTokenResponseCodec,
   FreesoundSoundInstanceCodec,
   FreesoundMeUserInstanceCodec,
-} from '@raudi/types';
-import { config } from '../config.js';
+} from '@raudi/common';
+import config from '../config.js';
 
 const FREESOUND_URL = 'https://freesound.org';
 const FREESOUND_API_URL = `${FREESOUND_URL}/apiv2`;

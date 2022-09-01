@@ -1,4 +1,4 @@
-import { FreesoundSoundInstance } from '@raudi/types';
+import { FreesoundSoundInstance } from '@raudi/common';
 import { Just, Maybe, Nothing } from 'purify-ts';
 import { useEffect, useState } from 'react';
 import { fetchSounds } from '../api/soundsApi';

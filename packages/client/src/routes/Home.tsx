@@ -1,5 +1,5 @@
 import { Button, CircularProgress, Heading } from '@chakra-ui/react';
-import { FreesoundSoundInstance } from '@raudi/types';
+import { FreesoundSoundInstance } from '@raudi/common';
 import { useCallback } from 'react';
 import { Sound } from '../components/Sound';
 import useLogin from '../hooks/useLogin';
@@ -9,7 +9,7 @@ import SoundDataAccordion from '../components/Sound/SoundDataAccordion';
 import SoundData from '../components/Sound/SoundData';
 import SoundTags from '../components/Sound/SoundTags';
 import SoundDescription from '../components/Sound/SoundDescription';
-import { config } from '@raudi/types';
+import config from '../config';
 
 type HomeProps = {
   UseSounds: UseSounds;

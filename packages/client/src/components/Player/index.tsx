@@ -7,7 +7,7 @@ import { VolumeSetter, VolumeButton, VolumeSlider } from './VolumeSetter';
 import Time from './Time';
 import NextButton from './NextButton';
 import { Box, Skeleton, Spacer } from '@chakra-ui/react';
-import { FreesoundSoundInstance } from '@raudi/types';
+import { FreesoundSoundInstance } from '@raudi/common';
 
 const NOOP = () => {
   return;

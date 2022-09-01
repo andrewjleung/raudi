@@ -1,5 +1,5 @@
 import { Tag } from '@chakra-ui/react';
-import { FreesoundSoundInstance } from '@raudi/types';
+import { FreesoundSoundInstance } from '@raudi/common';
 
 type SoundTagsProps = {
   sound: FreesoundSoundInstance;
