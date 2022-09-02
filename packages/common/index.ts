@@ -17,12 +17,43 @@ export enum Environment {
 
 export type RaudiBaseConfig = {
   clientPort: number;
+  clientUrl: string;
   serverPort: number;
+  serverUrl: string;
   host: string;
 };
 
-export const PROD_HOST = "raudi.xyz";
-export const DEV_HOST = "localhost";
+const INTERNAL_DOCKER_HOST = "0.0.0.0";
+const PROD_HOST = "raudi.xyz";
+const DEV_HOST = "localhost";
+
+export const getUrlsAndHost = (
+  isProd: boolean,
+  isDockerized: boolean,
+  { clientPort, serverPort }: Pick<RaudiBaseConfig, "clientPort" | "serverPort">
+): Pick<RaudiBaseConfig, "clientUrl" | "serverUrl" | "host"> => {
+  if (isProd) {
+    return {
+      clientUrl: `http://${PROD_HOST}`,
+      serverUrl: `http://${PROD_HOST}/api`,
+      host: INTERNAL_DOCKER_HOST,
+    };
+  }
+
+  if (isDockerized) {
+    return {
+      clientUrl: `http://${DEV_HOST}:80`,
+      serverUrl: `http://${DEV_HOST}:80/api`,
+      host: INTERNAL_DOCKER_HOST,
+    };
+  }
+
+  return {
+    clientUrl: `http://${DEV_HOST}:${clientPort}`,
+    serverUrl: `http://${DEV_HOST}:${serverPort}`,
+    host: DEV_HOST,
+  };
+};
 
 // COMMON TYPES
 

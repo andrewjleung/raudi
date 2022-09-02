@@ -51,7 +51,7 @@ const registerHooks = () => {
 const start = async () => {
   try {
     await fastify.listen({
-      host: '0.0.0.0',
+      host: config.host,
       port: config.serverPort,
     });
   } catch (err) {

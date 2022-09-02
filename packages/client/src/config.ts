@@ -1,4 +1,4 @@
-import { DEV_HOST, PROD_HOST, RaudiBaseConfig } from '@raudi/common';
+import { getUrlsAndHost, RaudiBaseConfig } from '@raudi/common';
 
 export type RaudiClientConfig = {
   clientUrl: string;
@@ -16,26 +16,16 @@ const buildConfig = (): RaudiClientConfig => {
 
   const clientPort = import.meta.env.VITE_CLIENT_PORT;
   const serverPort = import.meta.env.VITE_SERVER_PORT;
+  const isDockerized = import.meta.env.VITE_DOCKERIZED === 'true';
 
-  const ports = {
+  const ports: Pick<RaudiBaseConfig, 'clientPort' | 'serverPort'> = {
     clientPort: Number(clientPort),
     serverPort: Number(serverPort),
   };
 
-  if (import.meta.env.PROD) {
-    return {
-      ...ports,
-      host: PROD_HOST,
-      clientUrl: `https://${PROD_HOST}`,
-      serverUrl: `https://${PROD_HOST}/api`,
-    };
-  }
-
   return {
     ...ports,
-    host: DEV_HOST,
-    clientUrl: `http://${DEV_HOST}:80`,
-    serverUrl: `http://${DEV_HOST}:80/api`,
+    ...getUrlsAndHost(import.meta.env.PROD, isDockerized, ports),
   };
 };
 
