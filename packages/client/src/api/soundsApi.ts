@@ -12,7 +12,7 @@ export const fetchSounds = (
   EitherAsync.fromPromise(() =>
     authorizedFetch(`${config.serverUrl}/sounds/random`),
   )
-    .map((response) => response.json())
+    .chain((response) => EitherAsync(() => response.json()))
     .chain((response) =>
       EitherAsync.liftEither(
         array(FreesoundSoundInstanceCodec).decode(response),

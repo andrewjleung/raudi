@@ -76,6 +76,7 @@ export const useSounds = (): UseSounds => {
           return mockSounds;
         }
 
+        // TODO: Handle errors.
         return fetchSounds(authorizedFetch).then((value) => {
           const page = value.unsafeCoerce();
           setTotalSounds((totalSounds) => totalSounds + page.length);
