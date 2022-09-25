@@ -1,4 +1,9 @@
-import { Environment, getUrlsAndHost, RaudiBaseConfig } from '@raudi/common';
+import {
+  DEV_HOST,
+  Environment,
+  PROD_HOST,
+  RaudiBaseConfig,
+} from '@raudi/common';
 import dotenv from 'dotenv';
 
 export type RaudiServerConfig = {
@@ -26,17 +31,17 @@ export const getEnvOrDefault = (key: string, def?: string): string => {
 
 const buildConfig = (): RaudiServerConfig => {
   const isProd = process.env.NODE_ENV === Environment.PROD;
-  const isDockerized = process.env.DOCKERIZED === 'true';
-  const ports: Pick<RaudiBaseConfig, 'clientPort' | 'serverPort'> = {
-    clientPort: Number(getEnvOrDefault('CLIENT_PORT')),
-    serverPort: Number(getEnvOrDefault('SERVER_PORT')),
-  };
+  const clientPort = Number(getEnvOrDefault('CLIENT_PORT'));
+  const serverPort = Number(getEnvOrDefault('SERVER_PORT'));
 
   return {
+    clientPort,
+    serverPort,
+    host: isProd ? PROD_HOST : DEV_HOST,
     freesoundClientId: getEnvOrDefault('FREESOUND_CLIENT_ID'),
     freesoundClientSecret: getEnvOrDefault('FREESOUND_CLIENT_SECRET'),
-    ...ports,
-    ...getUrlsAndHost(isProd, isDockerized, ports),
+    clientUrl: isProd ? `http://${PROD_HOST}` : `http://${DEV_HOST}:80`,
+    serverUrl: isProd ? `http://${PROD_HOST}/api` : `http://${DEV_HOST}:80/api`,
   };
 };
 
