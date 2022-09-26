@@ -7,7 +7,6 @@ import { soundsRoutes } from './routes/sounds.js';
 import { AccessTokenJwtPayload } from '@raudi/common';
 import { authRoutes } from './routes/auth.js';
 import useJwt from './hooks/useJwt.js';
-import config from './config.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -52,7 +51,7 @@ const start = async () => {
   try {
     await fastify.listen({
       host: '0.0.0.0',
-      port: config.serverPort,
+      port: Number(process.env.PORT || 3000),
     });
   } catch (err) {
     fastify.log.error(err);

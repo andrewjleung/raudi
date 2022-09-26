@@ -31,12 +31,8 @@ export const getEnvOrDefault = (key: string, def?: string): string => {
 
 const buildConfig = (): RaudiServerConfig => {
   const isProd = process.env.NODE_ENV === Environment.PROD;
-  const clientPort = Number(getEnvOrDefault('CLIENT_PORT'));
-  const serverPort = Number(getEnvOrDefault('SERVER_PORT'));
 
   return {
-    clientPort,
-    serverPort,
     host: isProd ? PROD_HOST : DEV_HOST,
     freesoundClientId: getEnvOrDefault('FREESOUND_CLIENT_ID'),
     freesoundClientSecret: getEnvOrDefault('FREESOUND_CLIENT_SECRET'),

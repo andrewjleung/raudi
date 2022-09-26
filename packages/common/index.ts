@@ -16,8 +16,6 @@ export enum Environment {
 }
 
 export type RaudiBaseConfig = {
-  clientPort: number;
-  serverPort: number;
   host: string;
 };
 
