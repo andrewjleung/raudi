@@ -1,5 +1,5 @@
 FROM nginx:alpine
 
-ARG config=nginx.conf
+ARG config=prod.conf
 
-COPY ./$config /etc/nginx/nginx.conf
+COPY $config /etc/nginx/nginx.conf

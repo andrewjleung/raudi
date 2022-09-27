@@ -8,6 +8,8 @@ services:
       - frontend
     ports:
       - "80:80"
+    args:
+      config: nginx.conf
 
   backend:
     build:
