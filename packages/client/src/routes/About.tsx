@@ -33,6 +33,17 @@ export default function About() {
         My hope is for Raudi to eventually become a suite of mini inspiration
         tools or cool music-related bits and bobs.
       </Text>
+      <H>Note on Application Limits</H>
+      <Text>
+        As Raudi is built off of the Freesound API, it is also subject to
+        certain limits on its usage of said API. Most importantly, Raudi is
+        limited to making a maximum of 2000 requests a day, meaning that it may
+        run out of requests at which point the app will cease to work.
+      </Text>
+      <Text>
+        You may always get similar functionality from Freesound directly
+        [here](https://freesound.org/browse/random/).
+      </Text>
     </Writing>
   );
 }
