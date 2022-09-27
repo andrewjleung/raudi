@@ -17,6 +17,8 @@ services:
       - NODE_ENV=development
       - CLIENT_PORT=8080
       - SERVER_PORT=3000
+      - FREESOUND_CLIENT_ID=${FREESOUND_CLIENT_ID}
+      - FREESOUND_CLIENT_SECRET=${FREESOUND_CLIENT_SECRET}
     ports:
       - "3000:3000"
 
