@@ -42,7 +42,10 @@ export default function About() {
       </Text>
       <Text>
         You may always get similar functionality from Freesound directly
-        [here](https://freesound.org/browse/random/).
+        <Link textColor="blue.500" href="https://freesound.org/browse/random/">
+          here
+        </Link>
+        .
       </Text>
     </Writing>
   );
