@@ -41,7 +41,7 @@ export default function About() {
         run out of requests at which point the app will cease to work.
       </Text>
       <Text>
-        You may always get similar functionality from Freesound directly
+        You may always get similar functionality from Freesound directly{' '}
         <Link textColor="blue.500" href="https://freesound.org/browse/random/">
           here
         </Link>
