@@ -2,14 +2,15 @@ version: "3.8"
 
 services:
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+      args:
+        config: nginx.conf
     depends_on:
       - backend
       - frontend
     ports:
       - "80:80"
-    args:
-      config: nginx.conf
 
   backend:
     build:
