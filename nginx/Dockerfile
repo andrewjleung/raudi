@@ -1,3 +1,5 @@
 FROM nginx:alpine
 
-COPY ./nginx.conf /etc/nginx/nginx.conf
+ARG config=nginx.conf
+
+COPY ./$config /etc/nginx/nginx.conf
