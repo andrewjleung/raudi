@@ -24,7 +24,7 @@ export default function Footer({ className = '' }: FooterProps) {
         </Link>
       </div>
       <div
-        className="flex flex-row gap-3 hover:underline"
+        className="flex flex-row gap-3 hover:underline hover:cursor-pointer"
         onClick={() => navigate('/privacy')}
       >
         Privacy Policy
