@@ -36,8 +36,10 @@ const buildConfig = (): RaudiServerConfig => {
     host: isProd ? PROD_HOST : DEV_HOST,
     freesoundClientId: getEnvOrDefault('FREESOUND_CLIENT_ID'),
     freesoundClientSecret: getEnvOrDefault('FREESOUND_CLIENT_SECRET'),
-    clientUrl: isProd ? `http://${PROD_HOST}` : `http://${DEV_HOST}:80`,
-    serverUrl: isProd ? `http://${PROD_HOST}/api` : `http://${DEV_HOST}:80/api`,
+    clientUrl: isProd ? `https://${PROD_HOST}` : `http://${DEV_HOST}:80`,
+    serverUrl: isProd
+      ? `https://${PROD_HOST}/api`
+      : `http://${DEV_HOST}:80/api`,
   };
 };
 
