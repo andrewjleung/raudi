@@ -6,7 +6,6 @@ export default function Contact() {
   return (
     <Writing>
       <H>Contact</H>
-
       <Text>
         For any inquiries, feel free to contact me at{' '}
         <Link textColor="blue.500" href="mailto:andrewleung104@gmail.com">

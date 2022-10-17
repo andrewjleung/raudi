@@ -8,6 +8,7 @@ import Contact from './routes/Contact';
 import PrivacyPolicy from './routes/PrivacyPolicy';
 import { useSounds } from './hooks/useSounds';
 import Home from './routes/Home';
+import NotFound from './routes/NotFound';
 
 const App = () => {
   const UseSounds = useSounds();
@@ -22,6 +23,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer className="mt-auto" />
         </BrowserRouter>
