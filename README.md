@@ -1,5 +1,7 @@
 # Raudi
 
+https://raudi.xyz/
+
 Raudi is a tiny wrapper around [Freesound](https://freesound.org/)'s
 [random sound functionality](https://freesound.org/browse/random/). It is meant to be an inspiration
 tool for audio creatives to quickly cycle through random pieces of audio to use in or maybe even
