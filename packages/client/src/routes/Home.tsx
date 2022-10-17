@@ -9,7 +9,7 @@ import SoundDataAccordion from '../components/Sound/SoundDataAccordion';
 import SoundData from '../components/Sound/SoundData';
 import SoundTags from '../components/Sound/SoundTags';
 import SoundDescription from '../components/Sound/SoundDescription';
-import config from '../config';
+import { useNavigate } from 'react-router-dom';
 
 type HomeProps = {
   UseSounds: UseSounds;
@@ -18,6 +18,7 @@ type HomeProps = {
 export default function Home({ UseSounds }: HomeProps) {
   const { isLoggedIn } = useLogin(true);
   const { sound, getNextSound, canGetNextSound, isFetching } = UseSounds;
+  const navigate = useNavigate();
 
   const NoSounds = () => (
     <>
@@ -50,12 +51,8 @@ export default function Home({ UseSounds }: HomeProps) {
   if (!isLoggedIn) {
     return (
       <div className="mt-40 flex justify-center">
-        <Button
-          onClick={() => {
-            window.location.replace(`${config.serverUrl}/auth/login`);
-          }}
-        >
-          Login with Freesound
+        <Button>
+          <a href="/api/auth/login">Login with Freesound</a>
         </Button>
       </div>
     );

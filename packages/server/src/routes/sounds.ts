@@ -22,30 +22,31 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   fastify.get('/random', async (request, reply) => {
     if (request.freesound === undefined) {
       reply.code(401).send('Unauthorized.');
-    } else {
-      const accessToken = request.freesound.access_token;
-      const randomSoundIds = EitherAsync.rights(
-        [...Array(5)].map(() => EitherAsync.fromPromise(getRandomSoundId)),
-      );
-      const getRandomSounds = (ids: string[]) =>
-        EitherAsync.rights(
-          ids.map((id) =>
-            EitherAsync.fromPromise(() => getSound(accessToken)(id)),
-          ),
-        );
-
-      await randomSoundIds
-        .then(getRandomSounds)
-        .then((sounds) => {
-          if (sounds.length < 1) {
-            reply.code(500);
-            return;
-          }
-
-          reply.code(200).send(sounds);
-        })
-        .catch((e) => reply.code(500).send(e));
+      return;
     }
+
+    const accessToken = request.freesound.access_token;
+    const randomSoundIds = EitherAsync.rights(
+      [...Array(5)].map(() => EitherAsync.fromPromise(getRandomSoundId)),
+    );
+    const getRandomSounds = (ids: string[]) =>
+      EitherAsync.rights(
+        ids.map((id) =>
+          EitherAsync.fromPromise(() => getSound(accessToken)(id)),
+        ),
+      );
+
+    await randomSoundIds
+      .then(getRandomSounds)
+      .then((sounds) => {
+        if (sounds.length < 1) {
+          reply.code(500);
+          return;
+        }
+
+        reply.code(200).send(sounds);
+      })
+      .catch((e) => reply.code(500).send(e));
   });
 
   fastify.get<{ Params: { soundId: SoundId }; Querystring: SoundDownloadInfo }>(
@@ -61,24 +62,25 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
     (request, reply) => {
       if (request.freesound === undefined) {
         reply.code(401).send('Unauthorized.');
-      } else {
-        const accessToken = request.freesound.access_token;
-        const { soundId } = request.params;
-        const { filename, filesize } = request.query;
-
-        downloadSound(accessToken)(soundId).caseOf({
-          Left: (l) => reply.code(500).send(l),
-          Right: (getDownloadStream) =>
-            reply
-              .headers({
-                // https://github.com/eligrey/FileSaver.js/wiki/Saving-a-remote-file
-                'Content-Type': 'application/octet-stream; charset=utf-8',
-                'Content-Disposition': `attachment; filename=${filename} filename*=${filename}`,
-                'Content-Length': filesize,
-              })
-              .send(getDownloadStream()),
-        });
+        return;
       }
+
+      const accessToken = request.freesound.access_token;
+      const { soundId } = request.params;
+      const { filename, filesize } = request.query;
+
+      downloadSound(accessToken)(soundId).caseOf({
+        Left: (l) => reply.code(500).send(l),
+        Right: (getDownloadStream) =>
+          reply
+            .headers({
+              // https://github.com/eligrey/FileSaver.js/wiki/Saving-a-remote-file
+              'Content-Type': 'application/octet-stream; charset=utf-8',
+              'Content-Disposition': `attachment; filename=${filename} filename*=${filename}`,
+              'Content-Length': filesize,
+            })
+            .send(getDownloadStream()),
+      });
     },
   );
 
