@@ -1,5 +1,5 @@
 import { FreesoundSoundInstance } from '@raudi/common';
-import { Just, Maybe, Nothing } from 'purify-ts';
+import { Just, List, Maybe, Nothing } from 'purify-ts';
 import { useEffect, useState } from 'react';
 import { fetchSounds } from '../api/soundsApi';
 import { useAuthorizedFetch } from './useAuthorizedFetch';
@@ -131,11 +131,11 @@ export const useSounds = (): UseSounds => {
   }, [isLoggedIn]);
 
   return {
-    sound:
-      isLoggedIn && data
-        ? // TODO: ensure this access is safe.
-          Just(data.pages[soundLocation.page][soundLocation.soundIndex])
-        : Nothing,
+    sound: Just({})
+      .chain(() => Maybe.fromFalsy(isLoggedIn))
+      .chain(() => Maybe.fromFalsy(data))
+      .chain((data) => List.at(soundLocation.page, data.pages))
+      .chain((page) => List.at(soundLocation.soundIndex, page)),
     getNextSound,
     canGetNextSound: getNextSoundLocation(data, soundLocation).isJust(),
     isFetching,
