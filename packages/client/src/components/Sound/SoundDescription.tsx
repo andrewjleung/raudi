@@ -21,15 +21,6 @@ type UseTruncation = {
 
 const useTruncation = (str: string, charLimit: number): UseTruncation => {
   const [isTruncated, setIsTruncated] = useState(true);
-  const [prevStr, setPrevStr] = useState(str);
-
-  // https://beta.reactjs.org/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
-  // TODO: This is not necessarily a recommended pattern. Find a better way
-  // to reset a hook's state when a prop changes.
-  if (str != prevStr) {
-    setPrevStr(str);
-    setIsTruncated(true);
-  }
 
   // Only truncate if half or more of the string would be truncated by the
   // character limit.

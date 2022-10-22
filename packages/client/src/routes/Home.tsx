@@ -42,7 +42,7 @@ export default function Home({ UseSounds }: HomeProps) {
           canGetNextSound={canGetNextSound}
         />
         <SoundDataAccordion>
-          <SoundDescription className="mb-1" sound={sound} />
+          <SoundDescription className="mb-1" sound={sound} key={sound.id} />
           <SoundTags sound={sound} />
           <SoundData sound={sound} />
         </SoundDataAccordion>
