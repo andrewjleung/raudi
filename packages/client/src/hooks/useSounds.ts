@@ -122,6 +122,9 @@ export const useSounds = (): UseSounds => {
     });
 
   // Reset the sound location when the user gets logged out.
+  // TODO: This may be an anti-pattern according to the React beta docs:
+  // https://beta.reactjs.org/learn/you-might-not-need-an-effect
+  // Not 100% sure since this is a hook...
   useEffect(() => {
     if (!isLoggedIn) {
       setSoundLocation(DEFAULT_SOUND_LOCATION);

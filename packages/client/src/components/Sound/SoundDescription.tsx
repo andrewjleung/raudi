@@ -1,6 +1,6 @@
 import { Link } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/common';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Setter } from '../../types';
 import DOMPurify from 'dompurify';
 
@@ -21,14 +21,19 @@ type UseTruncation = {
 
 const useTruncation = (str: string, charLimit: number): UseTruncation => {
   const [isTruncated, setIsTruncated] = useState(true);
+  const [prevStr, setPrevStr] = useState(str);
+
+  // https://beta.reactjs.org/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  // TODO: This is not necessarily a recommended pattern. Find a better way
+  // to reset a hook's state when a prop changes.
+  if (str != prevStr) {
+    setPrevStr(str);
+    setIsTruncated(true);
+  }
 
   // Only truncate if half or more of the string would be truncated by the
   // character limit.
   const shouldTruncate = str.length > charLimit * 2;
-
-  useEffect(() => {
-    setIsTruncated(true);
-  }, [str]);
 
   return {
     truncated:
