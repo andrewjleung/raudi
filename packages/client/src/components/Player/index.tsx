@@ -8,20 +8,29 @@ import Time from './Time';
 import NextButton from './NextButton';
 import { Box, Skeleton, Spacer } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/common';
+import { State } from '../../types';
 
 const NOOP = () => {
   return;
 };
-const DEFAULT_VOLUME = 50;
 
 type PlayerProps = {
   sound: FreesoundSoundInstance;
+  Volume: State<number>;
   onClickNext: () => void;
   canGetNextSound: boolean;
 };
 
+// Volume should be a controlled state within the player because a player is
+// meant to be associated with a single sound. When the sound changes, it
+// should be considered a new component. Volume on the other hand, is persistent
+// and not associated with a single sound.
+//
+// Use the `key` prop to ensure the player state resets whenever the sound
+// is changed: https://beta.reactjs.org/learn/you-might-not-need-an-effect#resetting-all-state-when-a-prop-changes
 export default function Player({
   sound,
+  Volume,
   onClickNext,
   canGetNextSound,
 }: PlayerProps) {
@@ -29,7 +38,6 @@ export default function Player({
 
   const CanPlay = useState(false);
   const Playing = useState(false);
-  const Volume = useState(DEFAULT_VOLUME);
   const Muted = useState(false);
   const CurrentTime = useState(0);
   const Duration = useState<number>(0);
@@ -44,12 +52,6 @@ export default function Player({
   const [progress, setProgress] = Progress;
 
   const [switching, setSwitching] = useState(false);
-
-  useEffect(() => {
-    setPlaying(false);
-    setCurrentTime(0);
-    setProgress(0);
-  }, [sound, setPlaying, setCurrentTime, setProgress]);
 
   // TODO: Really need to clean up this pattern...
   useEffect(() => {

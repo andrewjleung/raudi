@@ -1,6 +1,6 @@
 import { Button, CircularProgress, Heading } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/common';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Sound } from '../components/Sound';
 import useLogin from '../hooks/useLogin';
 import { UseSounds } from '../hooks/useSounds';
@@ -9,7 +9,8 @@ import SoundDataAccordion from '../components/Sound/SoundDataAccordion';
 import SoundData from '../components/Sound/SoundData';
 import SoundTags from '../components/Sound/SoundTags';
 import SoundDescription from '../components/Sound/SoundDescription';
-import { useNavigate } from 'react-router-dom';
+
+const DEFAULT_VOLUME = 50;
 
 type HomeProps = {
   UseSounds: UseSounds;
@@ -18,7 +19,7 @@ type HomeProps = {
 export default function Home({ UseSounds }: HomeProps) {
   const { isLoggedIn } = useLogin(true);
   const { sound, getNextSound, canGetNextSound, isFetching } = UseSounds;
-  const navigate = useNavigate();
+  const Volume = useState(DEFAULT_VOLUME);
 
   const NoSounds = () => (
     <>
@@ -35,6 +36,8 @@ export default function Home({ UseSounds }: HomeProps) {
         <Sound sound={sound} />
         <Player
           sound={sound}
+          key={sound.id}
+          Volume={Volume}
           onClickNext={getNextSound}
           canGetNextSound={canGetNextSound}
         />
@@ -45,7 +48,7 @@ export default function Home({ UseSounds }: HomeProps) {
         </SoundDataAccordion>
       </div>
     ),
-    [canGetNextSound, getNextSound],
+    [Volume, canGetNextSound, getNextSound],
   );
 
   if (!isLoggedIn) {
