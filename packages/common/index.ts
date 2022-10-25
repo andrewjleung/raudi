@@ -15,13 +15,6 @@ export enum Environment {
   PROD = "production",
 }
 
-export type RaudiBaseConfig = {
-  host: string;
-};
-
-export const PROD_HOST = "raudi.xyz";
-export const DEV_HOST = "localhost";
-
 // COMMON TYPES
 
 const AccessTokenResponseProperties = {
