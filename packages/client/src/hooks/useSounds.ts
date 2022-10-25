@@ -25,11 +25,11 @@ export const useSounds = (): UseSounds => {
     ['sounds', isLoggedIn],
     () => fetchSounds(authorizedFetch).then((value) => value.unsafeCoerce()),
     {
-      // Random sound data is not inherently paginated, so no pagination
-      // params are really necessary here. However, we don't want
-      // `react-query` to wipe previous data with each fetch, so just return
-      // true here rather than any params.
-      getNextPageParam: () => isLoggedIn,
+      // Random sound data is not inherently paginated, so no pagination params
+      // are really necessary here. However, we don't want `react-query` to wipe
+      // previous data with each fetch, so just return true here rather than any
+      // params.
+      getNextPageParam: () => true,
       enabled: isLoggedIn,
     },
   );

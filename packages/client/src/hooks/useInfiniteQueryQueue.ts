@@ -29,15 +29,11 @@ type UseInfiniteQueryQueue<T> = {
 const getNextCursorPosition = <T>(
   data: InfiniteData<T[]> | undefined,
   cursor: Cursor,
-): Maybe<Cursor> => {
-  const { page, index } = cursor;
-
-  return Just({})
-    .chain(() => Maybe.fromNullable(data))
-    .chain((data) =>
-      List.at(page, data.pages).map((currentPage) => ({ data, currentPage })),
-    )
-    .chain(({ data, currentPage }) => {
+): Maybe<Cursor> =>
+  Just({ ...cursor })
+    .chain(bindM('data', () => Maybe.fromNullable(data)))
+    .chain(bindM('currentPage', ({ page, data }) => List.at(page, data.pages)))
+    .chain(({ index, page, data, currentPage }) => {
       if (index + 1 < currentPage.length) {
         return Just({ page, index: index + 1 });
       }
@@ -48,7 +44,6 @@ const getNextCursorPosition = <T>(
 
       return Nothing;
     });
-};
 
 /**
 This hook wraps a queue data structure for infinite queried data, providing a 
@@ -72,12 +67,15 @@ export default function useInfiniteQueryQueue<T>(
   const [queryKey, queryFn, options] = parameters;
   const [cursor, setCursor] = useState<Cursor>(DEFAULT_CURSOR);
 
-  // These two pieces of state are used to keep track of number counts for a
-  // flat index of which element of data the user is currently on and the total
-  // length of data since infinite data queried through `react-query` is
-  // paginated. This is used so that the app knows how ahead it is in terms of
-  // number of sounds so that it can decide whether to keep fetching sounds in
-  // the background.
+  /*
+  These two pieces of state are used to keep track of number counts for a flat 
+  index of which element of data the user is currently on and the total length 
+  of data since infinite data queried through `react-query` is paginated.
+  
+  This is used so that the app knows how ahead it is in terms of number of 
+  sounds so that it can decide whether to keep fetching sounds in the background 
+  or to wait since it is sufficiently ahead of the cursor.
+  */
   const [dataLength, setDataLength] = useState(0);
   const [flatCursor, setFlatCursor] = useState(0);
 
@@ -87,6 +85,8 @@ export default function useInfiniteQueryQueue<T>(
       async (context: QueryFunctionContext<QueryKey, unknown>) => {
         const result = queryFn(context);
 
+        // Intercept the given query function to increment the total amount of
+        // elements within the data.
         if (Array.isArray(result)) {
           setDataLength((length) => length + result.length);
         } else {
@@ -103,18 +103,21 @@ export default function useInfiniteQueryQueue<T>(
       },
     );
 
+  const dataIsNotAhead = dataLength - flatCursor < stayAheadCount;
+  const shouldFetchNextPage =
+    data !== undefined && !isFetchingNextPage && dataIsNotAhead;
+
   useInterval(
     () => {
-      if (data === undefined) {
-        return;
+      if (data !== undefined) {
+        fetchNextPage();
       }
-
-      fetchNextPage();
     },
     pollTime,
-    !isFetchingNextPage && dataLength - flatCursor < stayAheadCount,
+    shouldFetchNextPage,
   );
 
+  // Increment the cursor to the next position if more data is available.
   const getNext = (): void => {
     Just({})
       .chain(bindM('nextCursor', () => getNextCursorPosition<T>(data, cursor)))
