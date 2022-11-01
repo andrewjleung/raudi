@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Heading } from '@chakra-ui/react';
+import { Button, CircularProgress, Heading, Text } from '@chakra-ui/react';
 import { FreesoundSoundInstance } from '@raudi/common';
 import { useCallback, useState } from 'react';
 import { Sound } from '../components/Sound';
@@ -24,8 +24,11 @@ export default function Home({ UseSounds }: HomeProps) {
   const NoSounds = () => (
     <>
       <div className="mt-44 flex flex-col justify-center items-center gap-4">
-        <Heading textColor="green.300">Loading sounds...</Heading>
-        <CircularProgress isIndeterminate color="green.300" />
+        <Heading textColor="green.400">Loading sounds...</Heading>
+        <Text marginTop="-3" textColor="green.400">
+          (This may take a few seconds)
+        </Text>
+        <CircularProgress isIndeterminate color="green.400" />
       </div>
     </>
   );
