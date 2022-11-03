@@ -18,14 +18,17 @@ Raudi depends on the Freesound API to fetch and download sounds. In order for th
 need to supply a client ID and key within a `.env` file within the root directory. You can apply for
 these credentials with your Freesound account [here](https://freesound.org/apiv2/apply/).
 
+When asked to specify a callback URL for the key, use the following:
+
+```
+http://localhost:80/api/auth/callback
+```
+
 Creating a `.env` file can be done with the following commmand:
 
 ```bash
 cp .env.template .env
 ```
-
-For the OAuth flow to then work properly, you will then need to specify a callback URL for your
-credential. Set this to `http://localhost:80/api/auth/callback`.
 
 Raudi uses Docker to run its local environment. After all the above setup is done, you can run Raudi
 via Docker `compose` with the following command:
@@ -34,7 +37,7 @@ via Docker `compose` with the following command:
 yarn start
 ```
 
-At this point, you can access Raudi at `localhost:80`.
+At this point, you can access Raudi at `http://localhost:80`.
 
 ## Note on Rate Limits
 
