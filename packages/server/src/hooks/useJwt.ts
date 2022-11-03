@@ -7,8 +7,8 @@ import {
   RawRequestDefaultExpression,
   RawServerDefault,
 } from 'fastify';
-import { Maybe } from 'purify-ts';
-import { decrypt } from '../encryption.js';
+import { Just, Maybe } from 'purify-ts';
+import rotatingEncryption from '../encryption.js';
 import { encaseNullable } from '../utils/purify-utils.js';
 import { JWT_COOKIE_NAME } from '../routes/auth.js';
 import { AccessTokenJwtPayloadCodec } from '@raudi/common';
@@ -24,7 +24,10 @@ const useJwt =
     >,
   ): preValidationHookHandler =>
   (request, reply, done) => {
-    Maybe.fromNullable(request.cookies[JWT_COOKIE_NAME])
+    const { decrypt } = rotatingEncryption.get();
+
+    Just({})
+      .chain(encaseNullable(() => request.cookies[JWT_COOKIE_NAME]))
       .chain(encaseNullable((cookie) => reply.unsignCookie(cookie).value))
       .chain(encaseNullable((cookie) => fastify.jwt.decode<object>(cookie)))
       .chain((jwt) => AccessTokenJwtPayloadCodec.decode(jwt).toMaybe())

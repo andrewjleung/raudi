@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { Rotating } from './rotation.js';
 
 const STRING_ENCODING = 'base64';
 const AES_256_CBC = 'aes-256-cbc';
@@ -32,6 +33,6 @@ const encryption = (
   return { encrypt, decrypt };
 };
 
-const { encrypt, decrypt } = encryption();
+const rotatingEncryption = new Rotating(encryption);
 
-export { encrypt, decrypt };
+export default rotatingEncryption;

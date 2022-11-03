@@ -1,6 +1,6 @@
 import { Either, EitherAsync } from 'purify-ts';
 import config from '../config.js';
-import { encrypt } from '../encryption.js';
+import rotatingEncryption from '../encryption.js';
 import { getAccessToken, getMe } from '../apis/freesound.js';
 import { FastifyInstance, FastifyPluginCallback } from 'fastify';
 import { Static, Type } from '@sinclair/typebox';
@@ -20,6 +20,7 @@ const makeAccessTokenJwt =
   (fastify: FastifyInstance) =>
   (payload: AccessTokenJwtPayload): string => {
     const { access_token, refresh_token, expires_in } = payload;
+    const { encrypt } = rotatingEncryption.get();
 
     return fastify.jwt.sign(
       {
