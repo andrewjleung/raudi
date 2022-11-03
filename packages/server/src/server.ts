@@ -7,6 +7,7 @@ import { soundsRoutes } from './routes/sounds.js';
 import { AccessTokenJwtPayload } from '@raudi/common';
 import { authRoutes } from './routes/auth.js';
 import useJwt from './hooks/useJwt.js';
+import { genresRoutes } from './routes/genres.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -34,6 +35,7 @@ const registerRoutes = () => {
   fastify
     .register(authRoutes, { prefix: '/auth' })
     .register(soundsRoutes, { prefix: '/sounds' })
+    .register(genresRoutes, { prefix: '/genres' })
     .get('/me', (request, reply) => {
       if (request.freesound === undefined) {
         reply.code(401).send('Unauthorized.');
