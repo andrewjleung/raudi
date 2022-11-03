@@ -6,6 +6,7 @@ import {
   getSound,
 } from '../apis/freesound.js';
 import { Static, Type } from '@sinclair/typebox';
+import { FreesoundSoundInstance } from '@raudi/common';
 
 const SoundId = Type.Number();
 
@@ -20,6 +21,8 @@ type SoundDownloadInfo = Static<typeof SoundDownloadInfo>;
 
 const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
   fastify.get('/random', async (request, reply) => {
+    // TODO: Create a middleware that can accomplish this same check for
+    // specified endpoints.
     if (request.freesound === undefined) {
       reply.code(401).send('Unauthorized.');
       return;
@@ -29,23 +32,25 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
     const randomSoundIds = EitherAsync.rights(
       [...Array(5)].map(() => EitherAsync.fromPromise(getRandomSoundId)),
     );
+
+    const getRandomSound = (id: string) =>
+      EitherAsync.fromPromise(() => getSound(accessToken)(id));
+
     const getRandomSounds = (ids: string[]) =>
-      EitherAsync.rights(
-        ids.map((id) =>
-          EitherAsync.fromPromise(() => getSound(accessToken)(id)),
-        ),
-      );
+      EitherAsync.rights(ids.map(getRandomSound));
+
+    const verifySuccess = (sounds: FreesoundSoundInstance[]) => {
+      if (sounds.length < 1) {
+        reply.code(500);
+        return;
+      }
+
+      reply.code(200).send(sounds);
+    };
 
     await randomSoundIds
       .then(getRandomSounds)
-      .then((sounds) => {
-        if (sounds.length < 1) {
-          reply.code(500);
-          return;
-        }
-
-        reply.code(200).send(sounds);
-      })
+      .then(verifySuccess)
       .catch((e) => reply.code(500).send(e));
   });
 
@@ -71,7 +76,7 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
 
       downloadSound(accessToken)(soundId).caseOf({
         Left: (l) => reply.code(500).send(l),
-        Right: (getDownloadStream) =>
+        Right: (downloadStream) =>
           reply
             .headers({
               // https://github.com/eligrey/FileSaver.js/wiki/Saving-a-remote-file
@@ -79,7 +84,7 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
               'Content-Disposition': `attachment; filename=${filename} filename*=${filename}`,
               'Content-Length': filesize,
             })
-            .send(getDownloadStream()),
+            .send(downloadStream),
       });
     },
   );

@@ -1,4 +1,4 @@
-import { Either, Left, Right } from 'purify-ts';
+import { Either, EitherAsync, Left, List, Right } from 'purify-ts';
 import got, { Request } from 'got';
 import {
   AccessTokenResponse,
@@ -28,30 +28,26 @@ const getAccessToken = async (
     },
   };
 
-  try {
-    const response = await got
-      .post(`${FREESOUND_API_URL}/oauth2/access_token`, options)
-      .json();
-
-    return AccessTokenResponseCodec.decode(response);
-  } catch (e) {
-    return Left(e);
-  }
+  return got
+    .post(`${FREESOUND_API_URL}/oauth2/access_token`, options)
+    .json()
+    .then(AccessTokenResponseCodec.decode)
+    .catch(Left);
 };
 
-const getRandomSoundId = async (): Promise<Either<unknown, string>> => {
-  try {
-    const response = await got.get(`${FREESOUND_URL}/browse/random`);
-    const responseUrl = new URL(response.url);
-    const locations = responseUrl.pathname.split('/');
-    const soundId = locations[locations.indexOf('sounds') + 1];
-
-    return Right(soundId);
-  } catch (e) {
-    // TODO: DRY this?
-    return Left(e);
-  }
-};
+const getRandomSoundId = async (): Promise<Either<unknown, string>> =>
+  EitherAsync.fromPromise(() =>
+    got.get(`${FREESOUND_URL}/browse/random`).then(Right).catch(Left),
+  )
+    .map((response) => new URL(response.url))
+    .map((url) => url.pathname.split('/'))
+    .chain((locations) =>
+      EitherAsync.liftEither(
+        List.at(locations.indexOf('sounds') + 1, locations).toEither(
+          'Unable to fetch random sound ID.',
+        ),
+      ),
+    );
 
 const getSound =
   (accessToken: string) =>
@@ -71,15 +67,11 @@ const getSound =
       },
     };
 
-    try {
-      const response = await got
-        .get(`${FREESOUND_API_URL}/sounds/${id}`, options)
-        .json();
-
-      return FreesoundSoundInstanceCodec.decode(response);
-    } catch (e) {
-      return Left(e);
-    }
+    return got
+      .get(`${FREESOUND_API_URL}/sounds/${id}`, options)
+      .json()
+      .then(FreesoundSoundInstanceCodec.decode)
+      .catch(Left);
   };
 
 const getMe =
@@ -91,31 +83,25 @@ const getMe =
       },
     };
 
-    try {
-      const response = await got.get(`${FREESOUND_API_URL}/me`, options).json();
-
-      return FreesoundMeUserInstanceCodec.decode(response);
-    } catch (e) {
-      return Left(e);
-    }
+    return got
+      .get(`${FREESOUND_API_URL}/me`, options)
+      .json()
+      .then(FreesoundMeUserInstanceCodec.decode)
+      .catch(Left);
   };
 
 const downloadSound =
   (accessToken: string) =>
-  (id: number): Either<unknown, () => Request> => {
+  (id: number): Either<unknown, Request> => {
     const options = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     };
 
-    try {
-      return Right(() =>
-        got.stream(`${FREESOUND_API_URL}/sounds/${id}/download`, options),
-      );
-    } catch (e) {
-      return Left(e);
-    }
+    return Either.encase(() =>
+      got.stream(`${FREESOUND_API_URL}/sounds/${id}/download`, options),
+    );
   };
 
 export { getAccessToken, getRandomSoundId, getSound, getMe, downloadSound };

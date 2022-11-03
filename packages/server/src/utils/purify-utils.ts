@@ -5,4 +5,6 @@ const encaseNullable =
   (value: T): Maybe<R> =>
     Maybe.encase(() => Maybe.fromNullable(fn(value))).join();
 
+// TODO: Share purify utils between the client/server packages.
+
 export { encaseNullable };
