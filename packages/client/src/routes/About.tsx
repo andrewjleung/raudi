@@ -41,7 +41,16 @@ export default function About() {
         run out of requests at which point the app will cease to work.
       </Text>
       <Text>
-        You may always get similar functionality from Freesound directly{' '}
+        Feel free to self host an instance of Raudi to bypass the shared limits
+        of this public site. The details for doing this can be found on{' '}
+        <Link textColor="blue.500" href="https://github.com/andrewjleung/raudi">
+          GitHub
+        </Link>
+        .
+      </Text>
+      <Text>
+        In addition, You may always get similar functionality from Freesound
+        directly{' '}
         <Link textColor="blue.500" href="https://freesound.org/browse/random/">
           here
         </Link>

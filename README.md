@@ -15,28 +15,26 @@ go from there, no overthinking allowed!
 ## How to Run Raudi
 
 Raudi depends on the Freesound API to fetch and download sounds. In order for this to work, you will
-need to supply a client ID and key within a `.env` file within `packages/server`. You can apply for
+need to supply a client ID and key within a `.env` file within the root directory. You can apply for
 these credentials with your Freesound account [here](https://freesound.org/apiv2/apply/).
 
+Creating a `.env` file can be done with the following commmand:
+
+```bash
+cp .env.template .env
+```
+
 For the OAuth flow to then work properly, you will then need to specify a callback URL for your
-credential. Set this to `http://localhost:3000/auth/callback`.
+credential. Set this to `http://localhost:80/api/auth/callback`.
 
-After all this has been setup, you may run the Raudi client and server in two separate terminals
-using the following commands:
-
-### Client
+Raudi uses Docker to run its local environment. After all the above setup is done, you can run Raudi
+via Docker `compose` with the following command:
 
 ```bash
-npm --prefix packages/client run dev
+yarn start
 ```
 
-### Server
-
-```bash
-npm --prefix packages/server run start
-```
-
-You can then visit the client at `http://localhost:5173/`.
+At this point, you can access Raudi at `localhost:80`.
 
 ## Note on Rate Limits
 
@@ -47,10 +45,6 @@ A single unique client for the Freesound API has the following limits
 - 2000 requests per day
 
 Due to the slow speed of requests to Freesound, Raudi prefetches a set amount of sounds ahead of
-time to keep things as smooth as possible for the end user. This makes it somewhat easy to blow over
-the daily limit of requests if kept unchecked.
-
-A flag called `USE_MOCK` is available within the
-[`useSounds`](https://github.com/andrewjleung/raudi/blob/main/packages/client/src/hooks/useSounds.ts)
-hook to mitigate the amount of requests made in development. Setting this to `true` will defer to
-the usage of mock data rather than fetching sounds on the fly.
+time to keep things as smooth as possible for the end user. This makes it possible to blow over the
+daily limit of requests if kept unchecked. As of now there is no way I can think of to overcome this
+daily limit for the application, so please reach out if you have any ideas!
