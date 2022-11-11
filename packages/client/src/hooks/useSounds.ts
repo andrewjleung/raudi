@@ -15,7 +15,7 @@ export type UseSounds = {
   isFetching: boolean;
 };
 
-export const useSounds = (): UseSounds => {
+export const useSounds = (enabled: boolean): UseSounds => {
   const authorizedFetch = useAuthorizedFetch();
   const { isLoggedIn } = useLogin();
 
@@ -30,7 +30,7 @@ export const useSounds = (): UseSounds => {
       // previous data with each fetch, so just return true here rather than any
       // params.
       getNextPageParam: () => true,
-      enabled: isLoggedIn,
+      enabled: isLoggedIn && enabled,
     },
   );
 

@@ -6,6 +6,9 @@ module.exports = {
       borderWidth: {
         1: '1px',
       },
+      transitionProperty: {
+        height: 'height',
+      },
     },
   },
   plugins: [],
