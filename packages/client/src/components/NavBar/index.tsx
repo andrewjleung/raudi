@@ -19,11 +19,14 @@ export default function NavBar() {
 
   return (
     <div>
-      <div className="h-14 sticky top-0 flex flex-row items-center gap-3 bg-white border-b-1">
-        <div className="grow cursor-pointer" onClick={() => navigate('/')}>
+      <div
+        id="nav-items"
+        className="h-14 sticky top-0 flex flex-row items-center gap-3 bg-white border-b-1"
+      >
+        <div className="cursor-pointer" onClick={() => navigate('/')}>
           <Heading textColor="red.300">raudi</Heading>
         </div>
-        <NavButton href="/about" onClose={onClose}>
+        <NavButton className="ml-auto" href="/about" onClose={onClose}>
           About
         </NavButton>
         <NavButton href="/contact" onClose={onClose}>
@@ -39,6 +42,7 @@ export default function NavBar() {
         />
       </div>
       <div
+        id="drawer"
         className={cn(
           'fixed',
           'overflow-x-hidden',
