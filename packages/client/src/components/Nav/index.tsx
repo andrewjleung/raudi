@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import NavButton from './NavButton';
 import { Squash as Hamburger } from 'hamburger-react';
 import cn from 'classnames';
+import ToolCardContent from '../ToolCardContent';
 
 export default function NavBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,10 +27,10 @@ export default function NavBar() {
         <div className="cursor-pointer" onClick={() => navigate('/')}>
           <Heading textColor="red.300">raudi</Heading>
         </div>
-        <NavButton className="ml-auto" href="/about" onClose={onClose}>
+        <NavButton className="ml-auto" href="/about" onClick={onClose}>
           About
         </NavButton>
-        <NavButton href="/contact" onClose={onClose}>
+        <NavButton href="/contact" onClick={onClose}>
           Contact
         </NavButton>
         <Hamburger
@@ -59,18 +60,32 @@ export default function NavBar() {
       >
         <div
           className={cn(
-            'p-2',
+            'p-3',
             'transition-opacity ease-in-out',
             isOpen ? 'duration-200 delay-500' : '',
             isOpen ? 'opacity-100' : 'opacity-0',
-            'grid grid-cols-2 gap-2',
+            'grid grid-cols-2 gap-3',
           )}
         >
-          <NavButton className="col-span-2" href="/sounds" onClose={onClose}>
-            Random Sounds
+          <NavButton
+            className="col-span-2 sm:col-span-1"
+            href="/sounds"
+            onClick={onClose}
+          >
+            <ToolCardContent
+              title="Random Sounds"
+              description="Demo and download soundbytes for instant inspiration."
+            />
           </NavButton>
-          <NavButton className="col-span-2" href="/genres" onClose={onClose}>
-            Random Genres
+          <NavButton
+            className="col-span-2 sm:col-span-1"
+            href="/genres"
+            onClick={onClose}
+          >
+            <ToolCardContent
+              title="Random Genres"
+              description="Pick a random genre from Anthony Fantano's review descriptions."
+            />
           </NavButton>
         </div>
       </div>
