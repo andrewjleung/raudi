@@ -9,7 +9,7 @@ export default function Home() {
         Welcome to your <Highlight query="">musician&apos;s</Highlight>{' '}
         multi-tool!
       </div>
-      <div className="grid grid-cols-2 gap-6 mt-6 mb-6 max-w-3xl">
+      <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-6 mb-6 max-w-3xl">
         <NavButton className="col-span-2 sm:col-span-1" href="/sounds">
           <ToolCardContent
             className="sm:px-10 sm:py-20"

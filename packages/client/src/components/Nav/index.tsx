@@ -74,11 +74,11 @@ export default function NavBar() {
       >
         <div
           className={cn(
-            'p-3',
+            'p-4',
             'transition-opacity ease-in-out',
             isOpen ? 'duration-200 delay-500' : '',
             isOpen ? 'opacity-100' : 'opacity-0',
-            'grid grid-cols-2 gap-3',
+            'grid grid-cols-2 gap-4',
           )}
         >
           <NavButton
