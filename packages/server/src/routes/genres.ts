@@ -21,7 +21,10 @@ export const genresRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
         cast: true,
         columns: true,
       }),
-      transform((data) => data.genres.split(';;')), // TODO: Some type safety please...
+      // TODO: Some type safety please...
+      transform((data) =>
+        data.genres.split(';;').filter((genre: string) => genre.length > 0),
+      ),
       transform((data) => {
         data.forEach((entry: string) => genres.add(entry));
       }),
