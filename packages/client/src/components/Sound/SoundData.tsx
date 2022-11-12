@@ -11,7 +11,6 @@ import { FreesoundSoundInstance } from '@raudi/common';
 
 const DATA_COLUMNS: Array<keyof FreesoundSoundInstance> = [
   'created',
-  'license',
   'type',
   'channels',
   'filesize',
@@ -29,7 +28,9 @@ type SoundDataRowProps = {
 const SoundDataRow = ({ property, value }: SoundDataRowProps) => (
   <Tr>
     <Td>{property}</Td>
-    <Td>{JSON.stringify(value)}</Td>
+    <Td>
+      <div className="truncate ...">{JSON.stringify(value)}</div>
+    </Td>
   </Tr>
 );
 
@@ -41,7 +42,7 @@ type SoundDataProps = {
 export default function SoundData({ sound }: SoundDataProps) {
   return (
     <TableContainer>
-      <Table variant="striped" size="sm">
+      <Table size="sm">
         <Thead>
           <Tr>
             <Th>Property</Th>

@@ -17,7 +17,7 @@ const App = () => {
   const UseSounds = useSounds(soundsEnabled);
 
   return (
-    <div className="flex flex-col min-h-screen box-border px-10 pt-14">
+    <div className="flex flex-col min-h-screen box-border px-6 pt-14">
       <BrowserRouter>
         <NavBar />
         <Routes>

@@ -43,20 +43,22 @@ export default function RandomSounds({
 
   const SoundPlayer = useCallback(
     (sound: FreesoundSoundInstance) => (
-      <div className="flex flex-col gap-4">
-        <Sound sound={sound} />
-        <Player
-          sound={sound}
-          key={sound.id}
-          Volume={Volume}
-          onClickNext={getNextSound}
-          canGetNextSound={canGetNextSound}
-        />
-        <SoundDataAccordion>
-          <SoundDescription className="mb-1" sound={sound} key={sound.id} />
-          <SoundTags sound={sound} />
-          <SoundData sound={sound} />
-        </SoundDataAccordion>
+      <div className="flex justify-center mb-6">
+        <div className="flex flex-col gap-4 max-w-2xl justify-center">
+          <Sound sound={sound} />
+          <Player
+            sound={sound}
+            key={sound.id}
+            Volume={Volume}
+            onClickNext={getNextSound}
+            canGetNextSound={canGetNextSound}
+          />
+          <SoundDataAccordion>
+            <SoundDescription className="mb-1" sound={sound} key={sound.id} />
+            <SoundTags sound={sound} />
+            <SoundData sound={sound} />
+          </SoundDataAccordion>
+        </div>
       </div>
     ),
     [Volume, canGetNextSound, getNextSound],

@@ -20,14 +20,15 @@ export const VolumeSlider = ({ Volume, Muted }: VolumeProps) => {
   const [muted] = Muted;
 
   return (
-    <PlayerSlider
-      width="8em"
-      aria-label="Volume slider"
-      defaultValue={volume}
-      onChange={(v) => setVolume(v)}
-      step={SLIDER_STEP}
-      ignored={muted}
-    />
+    <div className="w-28 sm:w-36">
+      <PlayerSlider
+        aria-label="Volume slider"
+        defaultValue={volume}
+        onChange={(v) => setVolume(v)}
+        step={SLIDER_STEP}
+        ignored={muted}
+      />
+    </div>
   );
 };
 
