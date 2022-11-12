@@ -64,7 +64,7 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
         .map(makeAccessTokenJwt(fastify))
         .caseOf({
           Left: () => {
-            reply.redirect(302, '/');
+            reply.redirect(302, '/sounds');
           },
           Right: (jwt: string) => {
             const expireDate = new Date();
@@ -79,7 +79,7 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
                 sameSite: 'strict',
                 expires: expireDate,
               })
-              .redirect(302, '/');
+              .redirect(302, '/sounds');
           },
         }),
   );
