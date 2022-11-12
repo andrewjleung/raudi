@@ -16,6 +16,7 @@ const Drawer = ({ Disclosure }: DrawerProps) => {
     <div
       id="drawer"
       className={cn(
+        'z-10',
         'fixed',
         'overflow-x-hidden',
         'right-0',
@@ -93,9 +94,14 @@ export default function NavBar() {
 
   return (
     <div>
+      {/* TODO: This is a hack used to get a bottom border on the nav which
+                is affected by the x margins while still having the nav cover
+                content that overflows on narrow screens. Find a better way.
+      */}
+      <div className="h-14 fixed top-0 left-0 right-0 bg-white" />
       <div
         id="nav-items"
-        className="h-14 fixed top-0 left-10 right-10 bottom-auto flex flex-row items-center gap-3 bg-white border-b-1"
+        className="h-14 fixed top-0 left-0 right-0 mx-6 bottom-auto flex flex-row items-center gap-3 bg-white border-b-1"
       >
         <div
           className="cursor-pointer"
