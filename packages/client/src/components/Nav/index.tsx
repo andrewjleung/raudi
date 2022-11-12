@@ -22,15 +22,29 @@ export default function NavBar() {
     <div>
       <div
         id="nav-items"
-        className="h-14 sticky top-0 flex flex-row items-center gap-3 bg-white border-b-1"
+        className="h-14 fixed top-0 left-10 right-10 bottom-auto flex flex-row items-center gap-3 bg-white border-b-1"
       >
-        <div className="cursor-pointer" onClick={() => navigate('/')}>
+        <div
+          className="cursor-pointer"
+          onClick={() => {
+            onClose();
+            navigate('/');
+          }}
+        >
           <Heading textColor="red.300">raudi</Heading>
         </div>
-        <NavButton className="ml-auto" href="/about" onClick={onClose}>
+        <NavButton
+          className="ml-auto invisible sm:visible"
+          href="/about"
+          onClick={onClose}
+        >
           About
         </NavButton>
-        <NavButton href="/contact" onClick={onClose}>
+        <NavButton
+          className="invisible sm:visible"
+          href="/contact"
+          onClick={onClose}
+        >
           Contact
         </NavButton>
         <Hamburger
@@ -74,7 +88,7 @@ export default function NavBar() {
           >
             <ToolCardContent
               title="Random Sounds"
-              description="Demo and download soundbytes for instant inspiration."
+              description="Demo and download random soundbytes for instant inspiration, Tinder-style."
             />
           </NavButton>
           <NavButton
@@ -84,8 +98,22 @@ export default function NavBar() {
           >
             <ToolCardContent
               title="Random Genres"
-              description="Pick a random genre from Anthony Fantano's review descriptions."
+              description="Pick a random genre from Anthony Fantano's reviews to make music to."
             />
+          </NavButton>
+          <NavButton
+            className="visible sm:invisible"
+            href="/about"
+            onClick={onClose}
+          >
+            About
+          </NavButton>
+          <NavButton
+            className="visible sm:invisible"
+            href="/contact"
+            onClick={onClose}
+          >
+            Contact
           </NavButton>
         </div>
       </div>

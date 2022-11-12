@@ -1,9 +1,9 @@
 import cn from 'classnames';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 type NavButtonProps = {
   href: string;
-  onClick: () => void;
+  onClick?: () => void;
   children: React.ReactNode;
   className?: string;
 };
@@ -27,7 +27,9 @@ export default function NavButton({
         className,
       )}
       onClick={() => {
-        onClick();
+        if (onClick !== undefined) {
+          onClick();
+        }
         navigate(href);
       }}
     >
