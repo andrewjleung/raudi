@@ -1,6 +1,6 @@
 import { FreesoundSoundInstance } from '@raudi/common';
 import { Just, Maybe } from 'purify-ts';
-import { fetchSounds } from '../api/soundsApi';
+import { fetchSounds } from '../api/raudiApi';
 import { useAuthorizedFetch } from './useAuthorizedFetch';
 import useLogin from './useLogin';
 import useInfiniteQueryQueue from './useInfiniteQueryQueue';
@@ -23,7 +23,7 @@ export const useSounds = (enabled: boolean): UseSounds => {
     POLL_TIME,
     STAYAHEAD_SOUND_COUNT,
     ['sounds', isLoggedIn],
-    () => fetchSounds(authorizedFetch).then((value) => value.unsafeCoerce()),
+    () => fetchSounds(authorizedFetch),
     {
       // Random sound data is not inherently paginated, so no pagination params
       // are really necessary here. However, we don't want `react-query` to wipe
