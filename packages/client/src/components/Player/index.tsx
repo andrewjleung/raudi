@@ -112,8 +112,7 @@ export default function Player({
           <PlayPauseButton Playing={Playing} canPlay={canPlay} />
           <NextButton onClick={onClickNext} disabled={!canGetNextSound} />
           <DownloadButton sound={sound} />
-          <Spacer className="grow" />
-          <VolumeSetter>
+          <VolumeSetter className="ml-auto">
             <VolumeButton Volume={Volume} Muted={Muted} />
             <VolumeSlider Volume={Volume} Muted={Muted} />
           </VolumeSetter>

@@ -44,7 +44,7 @@ export default function RandomSounds({
   const SoundPlayer = useCallback(
     (sound: FreesoundSoundInstance) => (
       <div className="flex justify-center mb-6">
-        <div className="flex flex-col gap-4 max-w-2xl justify-center">
+        <div className="flex flex-col gap-4 w-full max-w-2xl justify-center">
           <Sound sound={sound} />
           <Player
             sound={sound}

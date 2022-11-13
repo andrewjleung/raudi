@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { State } from '../../types';
 import PlayerSlider from './PlayerSlider';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 const SLIDER_STEP = 0.01;
 
@@ -46,7 +46,7 @@ export const VolumeButton = ({ Volume, Muted }: VolumeProps) => {
     ? faVolumeOff
     : faVolumeHigh;
 
-  const iconClassNames = classNames(
+  const iconClassNames = cn(
     // TODO: Hacky solution to consistent icon sizes, also a bit jittery when the size switches.
     { 'w-4 h-4': volume === 0 && !muted, 'w-5 h-5': volume > 0 || muted },
     'ease-in-out duration-75',
@@ -65,8 +65,13 @@ export const VolumeButton = ({ Volume, Muted }: VolumeProps) => {
 
 type VolumeSetterProps = {
   children: React.ReactNode;
+  className?: string;
 };
 
-export const VolumeSetter = ({ children }: VolumeSetterProps) => {
-  return <div className="flex flex-row items-center gap-3">{children}</div>;
+export const VolumeSetter = ({ children, className }: VolumeSetterProps) => {
+  return (
+    <div className={cn('flex flex-row items-center gap-3', className)}>
+      {children}
+    </div>
+  );
 };

@@ -13,7 +13,7 @@ type SoundProps = {
 const Sound = ({ sound }: SoundProps) => {
   return (
     <div>
-      <div className="h-20 w-full flex items-end">
+      <div className="h-20 flex items-end">
         <Heading wordBreak="break-word" size="lg" noOfLines={2}>
           {sound.name}
         </Heading>
