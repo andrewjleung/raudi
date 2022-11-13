@@ -98,10 +98,10 @@ export default function NavBar() {
                 is affected by the x margins while still having the nav cover
                 content that overflows on narrow screens. Find a better way.
       */}
-      <div className="h-14 fixed top-0 left-0 right-0 bg-white" />
+      <div className="h-14 fixed top-0 left-0 right-0 bg-white z-10" />
       <div
         id="nav-items"
-        className="h-14 fixed top-0 left-0 right-0 mx-6 bottom-auto flex flex-row items-center gap-3 bg-white border-b-1"
+        className="h-14 fixed top-0 left-0 right-0 mx-6 bottom-auto flex flex-row items-center gap-3 bg-white border-b-1 z-10"
       >
         <div
           className="cursor-pointer"
