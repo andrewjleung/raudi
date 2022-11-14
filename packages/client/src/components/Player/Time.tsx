@@ -17,8 +17,8 @@ type TimeProps = {
 };
 
 const getHMS = (seconds: number): HoursMinutesSeconds => {
-  const minutes = seconds / 60;
-  const hours = minutes / 60;
+  const minutes = (seconds / 60) % 60;
+  const hours = (seconds / (60 * 60)) % 60;
 
   return {
     hours: Math.floor(hours),
