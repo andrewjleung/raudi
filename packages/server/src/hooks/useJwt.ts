@@ -1,7 +1,7 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import {
+  FastifyBaseLogger,
   FastifyInstance,
-  FastifyLoggerInstance,
   preValidationHookHandler,
   RawReplyDefaultExpression,
   RawRequestDefaultExpression,
@@ -19,7 +19,7 @@ const useJwt =
       RawServerDefault,
       RawRequestDefaultExpression,
       RawReplyDefaultExpression,
-      FastifyLoggerInstance,
+      FastifyBaseLogger,
       TypeBoxTypeProvider
     >,
   ): preValidationHookHandler =>

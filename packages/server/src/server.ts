@@ -8,10 +8,11 @@ import { AccessTokenJwtPayload } from '@raudi/common';
 import { authRoutes } from './routes/auth.js';
 import useJwt from './hooks/useJwt.js';
 import { genresRoutes } from './routes/genres.js';
+import { verifyFreesoundLogin } from './middleware.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
-    freesound?: AccessTokenJwtPayload;
+    freesound: AccessTokenJwtPayload;
   }
 }
 
@@ -36,12 +37,8 @@ const registerRoutes = () => {
     .register(authRoutes, { prefix: '/auth' })
     .register(soundsRoutes, { prefix: '/sounds' })
     .register(genresRoutes, { prefix: '/genres' })
-    .get('/me', (request, reply) => {
-      if (request.freesound === undefined) {
-        reply.code(401).send('Unauthorized.');
-      } else {
-        reply.code(200).send(request.freesound?.freesound_user_id);
-      }
+    .get('/me', { preHandler: [verifyFreesoundLogin] }, (request, reply) => {
+      reply.code(200).send(request.freesound.freesound_user_id);
     });
 };
 

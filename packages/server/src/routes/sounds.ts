@@ -7,6 +7,7 @@ import {
 } from '../apis/freesound.js';
 import { Static, Type } from '@sinclair/typebox';
 import { FreesoundSoundInstance } from '@raudi/common';
+import { verifyFreesoundLogin } from '../middleware.js';
 
 const SoundId = Type.Number();
 
@@ -20,39 +21,36 @@ const SoundDownloadInfo = Type.Object({
 type SoundDownloadInfo = Static<typeof SoundDownloadInfo>;
 
 const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
-  fastify.get('/random', async (request, reply) => {
-    // TODO: Create a middleware that can accomplish this same check for
-    // specified endpoints.
-    if (request.freesound === undefined) {
-      reply.code(401).send('Unauthorized.');
-      return;
-    }
+  fastify.get(
+    '/random',
+    { preHandler: [verifyFreesoundLogin] },
+    async (request, reply) => {
+      const accessToken = request.freesound.access_token;
+      const randomSoundIds = EitherAsync.rights(
+        [...Array(5)].map(() => EitherAsync.fromPromise(getRandomSoundId)),
+      );
 
-    const accessToken = request.freesound.access_token;
-    const randomSoundIds = EitherAsync.rights(
-      [...Array(5)].map(() => EitherAsync.fromPromise(getRandomSoundId)),
-    );
+      const getRandomSound = (id: string) =>
+        EitherAsync.fromPromise(() => getSound(accessToken)(id));
 
-    const getRandomSound = (id: string) =>
-      EitherAsync.fromPromise(() => getSound(accessToken)(id));
+      const getRandomSounds = (ids: string[]) =>
+        EitherAsync.rights(ids.map(getRandomSound));
 
-    const getRandomSounds = (ids: string[]) =>
-      EitherAsync.rights(ids.map(getRandomSound));
+      const verifySuccess = (sounds: FreesoundSoundInstance[]) => {
+        if (sounds.length < 1) {
+          reply.code(500);
+          return;
+        }
 
-    const verifySuccess = (sounds: FreesoundSoundInstance[]) => {
-      if (sounds.length < 1) {
-        reply.code(500);
-        return;
-      }
+        reply.code(200).send(sounds);
+      };
 
-      reply.code(200).send(sounds);
-    };
-
-    await randomSoundIds
-      .then(getRandomSounds)
-      .then(verifySuccess)
-      .catch((e) => reply.code(500).send(e));
-  });
+      await randomSoundIds
+        .then(getRandomSounds)
+        .then(verifySuccess)
+        .catch((e) => reply.code(500).send(e));
+    },
+  );
 
   fastify.get<{ Params: { soundId: SoundId }; Querystring: SoundDownloadInfo }>(
     '/:soundId/download',
@@ -63,13 +61,9 @@ const soundsRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
         },
         querystring: SoundDownloadInfo,
       },
+      preHandler: [verifyFreesoundLogin],
     },
     (request, reply) => {
-      if (request.freesound === undefined) {
-        reply.code(401).send('Unauthorized.');
-        return;
-      }
-
       const accessToken = request.freesound.access_token;
       const { soundId } = request.params;
       const { filename, filesize } = request.query;

@@ -58,7 +58,6 @@ export default function useLogin(verifyLogin = false): UseLogin {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    // TODO: Ensure that only a single `me` request can be in flight at one time.
     const fetchLoginState = async () => {
       const response = await fetch('/api/me', {
         credentials: 'include',
