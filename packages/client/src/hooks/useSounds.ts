@@ -16,6 +16,8 @@ export type UseSounds = {
   isFetching: boolean;
 };
 
+// TODO: Sounds should only be actively fetched if the user is logged in and is
+// on the sounds screen.
 export const useSounds = (enabled: boolean): UseSounds => {
   const authorizedFetch = useAuthorizedFetch();
   const { isLoggedIn } = useLogin();

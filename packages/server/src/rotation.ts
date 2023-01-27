@@ -34,7 +34,6 @@ export class Rotating<T> {
     if (Date.now() > this.timestamp + this.lifetime) {
       this.timestamp = Date.now();
       this.value = this.create();
-      console.log('Rotating!');
     }
 
     return this.value;

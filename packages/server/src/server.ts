@@ -20,7 +20,6 @@ const fastify = Fastify({
   logger: true,
 }).withTypeProvider<TypeBoxTypeProvider>();
 
-// TODO: Configure CORS.
 const registerPlugins = () => {
   fastify
     .register(fastifyJwt, {
