@@ -15,7 +15,7 @@ type SoundId = Static<typeof SoundId>;
 
 const SoundDownloadInfo = Type.Object({
   filename: Type.String(),
-  filesize: Type.Number(),
+  filesize: Type.Optional(Type.Number()),
 });
 
 type SoundDownloadInfo = Static<typeof SoundDownloadInfo>;
