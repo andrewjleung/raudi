@@ -1,5 +1,5 @@
 import { Either, EitherAsync, Left, List, Right } from 'purify-ts';
-import got, { Request } from 'got';
+import got, { OptionsOfTextResponseBody, Request } from 'got';
 import {
   AccessTokenResponse,
   FreesoundSoundInstance,
@@ -16,16 +16,16 @@ const FREESOUND_API_URL = `${FREESOUND_URL}/apiv2`;
 const getAccessToken = async (
   authCode: string,
 ): Promise<Either<unknown, AccessTokenResponse>> => {
-  const options = {
+  const options: OptionsOfTextResponseBody = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
-    searchParams: {
+    body: new URLSearchParams({
       client_id: config.freesoundClientId,
       client_secret: config.freesoundClientSecret,
       grant_type: 'authorization_code',
       code: authCode,
-    },
+    }).toString(),
   };
 
   return got
