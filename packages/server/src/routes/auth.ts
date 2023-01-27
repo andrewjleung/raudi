@@ -63,10 +63,13 @@ const authRoutes: FastifyPluginCallback = (fastify, _opts, done) => {
         .chain(makeAccessTokenJwtPayload)
         .map(makeAccessTokenJwt(fastify))
         .caseOf({
-          Left: () => {
+          Left: (error) => {
+            console.error(error);
             reply.redirect(302, '/sounds');
           },
           Right: (jwt: string) => {
+            // TODO: Start fetching sounds at this point to alleviate the
+            // perceived initial load.
             const expireDate = new Date();
             expireDate.setTime(expireDate.getTime() + ACCESS_DURATION_MS);
 
