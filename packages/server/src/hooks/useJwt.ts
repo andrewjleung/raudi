@@ -7,9 +7,8 @@ import {
   RawRequestDefaultExpression,
   RawServerDefault,
 } from 'fastify';
-import { Just, Maybe } from 'purify-ts';
+import { Either, Maybe, Right } from 'purify-ts';
 import rotatingEncryption from '../encryption.js';
-import { encaseNullable } from '../utils/purify-utils.js';
 import { JWT_COOKIE_NAME } from '../routes/auth.js';
 import { AccessTokenJwtPayloadCodec } from '@raudi/common';
 
@@ -26,20 +25,38 @@ const useJwt =
   (request, reply, done) => {
     const { decrypt } = rotatingEncryption.get();
 
-    Just({})
-      .chain(encaseNullable(() => request.cookies[JWT_COOKIE_NAME]))
-      .chain(encaseNullable((cookie) => reply.unsignCookie(cookie).value))
-      .chain(encaseNullable((cookie) => fastify.jwt.decode<object>(cookie)))
-      .chain((jwt) => AccessTokenJwtPayloadCodec.decode(jwt).toMaybe())
+    Right({})
+      .chain(() =>
+        Maybe.fromNullable(request.cookies[JWT_COOKIE_NAME]).toEither(
+          'Missing JWT cookie.',
+        ),
+      )
+      .chain((cookie) =>
+        Maybe.fromNullable(reply.unsignCookie(cookie).value).toEither(
+          'Failed to verify cookie signature.',
+        ),
+      )
+      .chain((cookie) =>
+        Maybe.fromNullable(fastify.jwt.decode<object>(cookie)).toEither(
+          'Failed to decode JWT.',
+        ),
+      )
+      .chain((jwt) => AccessTokenJwtPayloadCodec.decode(jwt))
       .chain((jwt) =>
-        Maybe.encase(() => ({
+        Either.encase(() => ({
           ...jwt,
           access_token: decrypt(jwt.access_token),
           refresh_token: decrypt(jwt.refresh_token),
         })),
       )
-      .ifJust((jwt) => {
-        request.freesound = jwt;
+      .caseOf({
+        Left: (error) => {
+          reply.clearCookie(JWT_COOKIE_NAME);
+          console.error(error);
+        },
+        Right: (jwt) => {
+          request.freesound = jwt;
+        },
       });
 
     done();
